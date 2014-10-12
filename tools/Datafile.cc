@@ -74,7 +74,7 @@ void Datafile::openExisting(const char* filename)
         this->okToRead =  this->readHeader();
     }
     else {
-     cerr << "unable to open file '" << filename << "'\n"; 
+     cout  << "unable to open file '" << filename << "'\n"; 
     }
 }
 
@@ -139,7 +139,7 @@ bool Datafile::readHeader()
         return true;
     }
     else {
-	cerr << " not recognized. unable to read file!\n";
+	cout << " not recognized. unable to read file!\n";
         return false;
     }
     
@@ -178,6 +178,7 @@ void Datafile::write(double value)
     if(this->okToWrite) {
 	
 	this->file->write( (char*) (&value), sizeof(value) );
+	++valuesCount;
     }
 }
 

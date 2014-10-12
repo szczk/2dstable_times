@@ -17,6 +17,12 @@ using namespace std;
 
 
 
+struct vec {
+     double x;
+     double y;
+};
+
+
 
 // global settings class (singleton)
 
@@ -86,7 +92,7 @@ private:
       */
      bool multipleOutputFile;
      int multipleOutputFileNumber;
-     
+
      string datafileNameTemplate;
 
 public:
@@ -215,6 +221,14 @@ public:
      void setX0 ( paramsType x0 ) {
           this->parameters["X0"] = x0;
      }
+     paramsType getY0() {
+          return this->parameters["Y0"];
+     }
+
+     void setY0 ( paramsType y0 ) {
+          this->parameters["Y0"] = y0;
+     }
+
 
      /**
       * Read command line parameters, can be used to overwrite loaded params
@@ -252,10 +266,11 @@ public:
      const char * getFilesPrefix() {
           return this->filesPrefix.c_str();
      }
-     
-     
-     
-     string getDatafileName();
+
+
+
+     string getDatafileName ( const char * , int nt );
+
 };
 
 

@@ -62,19 +62,19 @@ void Settings::readCommandLineParameters ( int argc, char** argv )
                this->setNtrajectories ( atoi ( argv[i+1] ) );
           }       
           
-//           if ( strcmp ( "--pt",argv[i] ) == 0  && ( i+1 ) < argc ) {
-// 	       int type = atoi ( argv[i+1] ) ;
-// 	       if(type!=2 && type!=4) type = 1;
-//                cout << " new potential type: '" << type << "'" << endl;
-//                this->set ("POTENTIAL_TYPE", type );
-//           }
-//           
-//           if ( strcmp ( "--nt",argv[i] ) == 0  && ( i+1 ) < argc ) {
-// 	       int type = atoi ( argv[i+1] ) ;
-// 	       if(type!=1 && type!=2 && type!=3 ) type = 1;
-//                cout << " new noise type: '" << type << "'" << endl;
-//                this->set ("NOISE_TYPE", type) ;
-//           }
+          if ( strcmp ( "--pt",argv[i] ) == 0  && ( i+1 ) < argc ) {
+	       int type = atoi ( argv[i+1] ) ;
+	       if(type!=2 && type!=4) type = 1;
+               cout << " new potential type: '" << type << "'" << endl;
+               this->set ("POTENTIAL_TYPE", type );
+          }
+          
+          if ( strcmp ( "--nt",argv[i] ) == 0  && ( i+1 ) < argc ) {
+	       int type = atoi ( argv[i+1] ) ;
+	       if(type!=1 && type!=2 && type!=3 ) type = 1;
+               cout << " new noise type: '" << type << "'" << endl;
+               this->set ("NOISE_TYPE", type) ;
+          }
           
           // usunac kiedy nie bedzie juz potrzebne
           if ( strcmp ( "--data_file_num",argv[i] ) == 0  && ( i+1 ) < argc ) {
@@ -228,20 +228,27 @@ string  Settings::normalizePath ( const char* str )
 
 
 
-string Settings::getDatafileName() {
+string Settings::getDatafileName(const char* folder, int nt) {
   
-     sprintf ( dataFile,"%s/alpha_%1.1f_beta_%1.1f_noise_%1.3f_traj_%d.dat",settings.getDataPath(), alpha,beta,noiseD , ntraj );
-  
-    
      char dataFile[200];
+     
+     double alpha = getJumpsParameter();
+     double beta = getWaitingTimesParameter();
+     double noise = getNoiseIntensity();
+     int noiseType = (int) get("NOISE_TYPE");
+     int potentialType = (int) get("POTENTIAL_TYPE");
+     
+     
      if ( this->multipleOutputs() ) {
           cout << " multiple outputs! generating file #" << this->getMultipleOutputFilenum() <<endl;
           //wielokrotny output, wyjsciowy plik dat musi miec numerek przyslany z zewnatrz
-          sprintf ( dataFile,"%s/%s_alpha_%1.2f_s_%1.2f_fi_%2.5f_n%d_fpt_%d.dat",this->getStoragePath(), this->getFilesPrefix(), alpha, sigma, angle, ( int ) noiseType, settings.getMultipleOutputFilenum() );
+          sprintf ( dataFile,"%s/%s_a%1.2f_b%1.2f_s%1.2f_nt%i_pt%i_%i_tr%i.dat",folder, getFilesPrefix(),alpha ,beta , noise , noiseType, potentialType, getMultipleOutputFilenum(),nt );
      } else {
           // wszystko do jednego pliku
-          sprintf ( dataFile,"%s/%s_alpha_%1.2f_s_%1.2f_fi_%2.5f_fpt.dat",this.getStoragePath(), this->getFilesPrefix(), alpha , sigma, angle );
+          sprintf ( dataFile,"%s/%s_a%1.2f_b%1.2f_s%1.2f_nt%i_pt%i_tr%i.dat",folder, getFilesPrefix(),alpha ,beta , noise , noiseType, potentialType, nt );
      }
+     
+     
      
      return string(dataFile);
 }

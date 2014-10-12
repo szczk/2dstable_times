@@ -59,3 +59,7 @@ generator: $(GENLIBOBJ) generator.o
 
 analysis: $(GENLIBOBJ) analysis.o
 	$(CPP) $^ -L $(INCLUDEFLAGS) $(LDFLAGS) -o analysis.x 
+
+	
+converter: $(GENLIBOBJ) converter.o
+	$(CPP) $^ -L $(INCLUDEFLAGS) $(LDFLAGS) -o converter.x 
