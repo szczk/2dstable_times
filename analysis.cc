@@ -38,49 +38,92 @@ int main ( int argc, char **argv )
      
      
      
-     
-     
-     int maxNum = settings.getMultipleOutputFilenum();     
-     
-     for ( int nt =0; nt < ntrajectories ; nt++ ) {
+     if(settings.multipleOutputs()) {
        
-          if ( nt%tenPerc==0 ) {
-               cout << nt<<"/"<<ntrajectories<<endl;
+       int maxNum = settings.getMultipleOutputFilenum(); 
+       
+       for(int filenum = 1; filenum <= maxNum ; filenum++ )
+       {
+        
+          for ( int nt =0; nt < ntrajectories ; nt++ ) {
+       
+            if ( nt%tenPerc==0 ) {
+                cout << nt<<"/"<<ntrajectories<<endl;
+            }
+          
+            string outputFile = settings. getMultiDatafileName( settings.getDataPath(), filenum,  nt);
+        
+            cout << "opening " << outputFile << endl;
+        
+            Datafile * datafile = Datafile::open ( outputFile.c_str() );
+            if(datafile->ok()) {
+              datafiles->push_back(datafile);
+            }
+            else {
+             delete datafile; 
+            }
           }
-         
-          string outputFile = settings.getDatafileName( settings.getDataPath(), nt);
-	  
-	  cout << "opening " << outputFile << endl;
-	  
-          Datafile * datafile = Datafile::open ( outputFile.c_str() );
-	  
-	  datafiles->push_back(datafile);
+       }
+     }
+     else 
+     {
+          for ( int nt =0; nt < ntrajectories ; nt++ ) {
+       
+            if ( nt%tenPerc==0 ) {
+                cout << nt<<"/"<<ntrajectories<<endl;
+            }
+          
+            string outputFile = settings.getDatafileName( settings.getDataPath(), nt);
+        
+            cout << "opening " << outputFile << endl;
+        
+            Datafile * datafile = Datafile::open ( outputFile.c_str() );
+            
+            if(datafile->ok()) {
+              datafiles->push_back(datafile);
+            }
+            else {
+             delete datafile; 
+            }
+          }
      }
      
      
      
-     // analyse
      
      
-//      for ( int nt =0; nt < ntrajectories ; nt++ ) {
-//        
-//           if ( nt%tenPerc==0 ) {
-//                cout << nt<<"/"<<ntrajectories<<endl;
-//           }
-//          
-//           string outputFile = settings.getDatafileName( settings.getDataPath(), nt);
-// 	  
-// 	  cout << "opening " << outputFile << endl;
-// 	  
-//           Datafile * datafile = Datafile::open ( outputFile.c_str() );
-// 
-// 	  datafile->close();
-//      }
+         
+     cout << endl << endl << " opened trajectories files: " << datafiles->size() << endl;
+
+     
+     
+     // analysis
+     
+     
+     
+     /**
+      * all trajectories loaded at the same time
+      * 
+      * so we have all (x,y) in a given time t
+      * 
+      * create CDF (EDF)  for x and y in given t
+      * 
+      * from EDF for  two different t calculate K-S test
+      * 
+      */
+     
+     
+     
+     
+     
+     
 
      
 
      // close all datafiles
      
+     
+     cout << endl << " closing datafiles "<< endl;
      for( int j = 0 ; j < datafiles->size() ; j++) {
       
        Datafile * f = datafiles->at(j);

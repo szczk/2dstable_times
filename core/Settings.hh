@@ -270,7 +270,7 @@ public:
 
 
      string getDatafileName ( const char * , int nt );
-
+     string getMultiDatafileName(const char* folder, int multiOutputFilenum, int nt);
 };
 
 

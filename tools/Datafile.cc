@@ -1,7 +1,7 @@
 #include "Datafile.hh"
 
 
-Datafile::Datafile() : file(0), filename(0), singleValueSizeBytes(sizeof(double)), alreadyClosed(false), valuesCount(0), valuesRead(0)
+Datafile::Datafile() : file(0), filename(0), singleValueSizeBytes(sizeof(double)), okToRead(false), okToWrite(false), alreadyClosed(false), valuesCount(0), valuesRead(0)
 {
 
 }
@@ -74,6 +74,8 @@ void Datafile::openExisting(const char* filename)
         this->okToRead =  this->readHeader();
     }
     else {
+     this->okToWrite = false;
+     this->okToRead = false;
      cout  << "unable to open file '" << filename << "'\n"; 
     }
 }
