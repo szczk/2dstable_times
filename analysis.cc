@@ -42,6 +42,9 @@ int main ( int argc, char **argv )
        
        int maxNum = settings.getMultipleOutputFilenum(); 
        
+       int lastTrajectoryCount = 0;
+       bool first = true;
+       
        for(int filenum = 1; filenum <= maxNum ; filenum++ )
        {
         
@@ -51,13 +54,27 @@ int main ( int argc, char **argv )
                 cout << nt<<"/"<<ntrajectories<<endl;
             }
           
-            string outputFile = settings. getMultiDatafileName( settings.getDataPath(), filenum,  nt);
+            string outputFile = settings.getMultiDatafileName( settings.getDataPath(), filenum,  nt);
         
             cout << "opening " << outputFile << endl;
         
             Datafile * datafile = Datafile::open ( outputFile.c_str() );
             if(datafile->ok()) {
+              
+              int count = datafile->getCount();
+              
+              if(first) {
+                lastTrajectoryCount = count;                
+              }
+              
+              if( count != lastTrajectoryCount ) {
+                cout << " non equal trajectory count! " << cout << " vs " << lastTrajectoryCount << "!!!" << endl; 
+                throw -1;
+              }
+              
               datafiles->push_back(datafile);
+              
+              lastTrajectoryCount = count;
             }
             else {
              delete datafile; 
@@ -120,20 +137,7 @@ int main ( int argc, char **argv )
 
      
 
-     // close all datafiles
-     
-     
-     cout << endl << " closing datafiles "<< endl;
-     for( int j = 0 ; j < datafiles->size() ; j++) {
-      
-       Datafile * f = datafiles->at(j);
-       f->close();
-       delete f;
-       
-     }
-     
-     
-     delete datafiles;
+
 
 
 

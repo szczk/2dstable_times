@@ -41,7 +41,7 @@ int main ( int argc, char **argv )
          
           string outputFile = settings.getDatafileName(settings.getStoragePath(), nt);
 	  
-	  cout << "saving in  " << outputFile << endl;
+          cout << "saving in  " << outputFile << endl;
 	  
           Datafile * datafile = Datafile::create ( outputFile.c_str() );
 	  
