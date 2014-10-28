@@ -73,7 +73,7 @@ bool EDF::isOk ( volatile double &x)
 
 
 
-void save() {
+void EDF::save() {
     this->calculate();
  
  

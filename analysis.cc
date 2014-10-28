@@ -20,130 +20,64 @@ int main ( int argc, char **argv )
      settings.readCommandLineParameters ( argc,argv );
      settings.printParameters();
 
-     
+
      ///==================================================================================
-     
 
-     //double maxT = settings.get ( "maxT" );
-     double dt = settings.get("dt");
 
-     double ntrajectories = settings.getNtrajectories();
-     int tenPerc = ( ntrajectories>10 ) ? ( int ) ( ntrajectories*0.1 ) : 1;
+     double maxT = settings.get ( "maxT" );
+     double dt = settings.get ( "dt" );
+     double starttime = settings.get("starttime");
 
-  
-    
-     vector<Datafile *> * datafiles = new vector<Datafile*>();
-     
      //open datafiles with trajectories
-     
-     
-     
-     if(settings.multipleOutputs()) {
-       
-       int maxNum = settings.getMultipleOutputFilenum(); 
-       
-       int lastTrajectoryCount = 0;
-       bool first = true;
-       
-       for(int filenum = 1; filenum <= maxNum ; filenum++ )
-       {
-        
-          for ( int nt =0; nt < ntrajectories ; nt++ ) {
-       
-            if ( nt%tenPerc==0 ) {
-                cout << nt<<"/"<<ntrajectories<<endl;
-            }
-          
-            string outputFile = settings.getMultiDatafileName( settings.getDataPath(), filenum,  nt);
-        
-            cout << "opening " << outputFile << endl;
-        
-            Datafile * datafile = Datafile::open ( outputFile.c_str() );
-            if(datafile->ok()) {
-              
-              int count = datafile->getCount();
-              
-              if(first) {
-                lastTrajectoryCount = count;                
-              }
-              
-              if( count != lastTrajectoryCount ) {
-                cout << " non equal trajectory count! " << cout << " vs " << lastTrajectoryCount << "!!!" << endl; 
-                throw -1;
-              }
-              
-              datafiles->push_back(datafile);
-              
-              lastTrajectoryCount = count;
-            }
-            else {
-             delete datafile; 
-            }
-          }
-       }
-     }
-     else 
-     {
-          for ( int nt =0; nt < ntrajectories ; nt++ ) {
-       
-            if ( nt%tenPerc==0 ) {
-                cout << nt<<"/"<<ntrajectories<<endl;
-            }
-          
-            string outputFile = settings.getDatafileName( settings.getDataPath(), nt);
-        
-            cout << "opening " << outputFile << endl;
-        
-            Datafile * datafile = Datafile::open ( outputFile.c_str() );
-            
-            if(datafile->ok()) {
-              datafiles->push_back(datafile);
-            }
-            else {
-             delete datafile; 
-            }
-          }
-     }
-     
-     
-     
-     
-     
-         
-     cout << endl << endl << " opened trajectories files: " << datafiles->size() << endl;
 
-     
-     
+     TrajectoriesDatafilesIterator * trajIterator = new TrajectoriesDatafilesIterator ( &settings );
+
+
+
+
+
+
      // analysis
-     
-     
-     
+
+
+
      /**
       * all trajectories loaded at the same time
-      * 
+      *
       * so we have all (x,y) in a given time t
-      * 
+      *
       * create CDF (EDF)  for x and y in given t
-      * 
+      *
       * from EDF for  two different t calculate K-S test
-      * 
+      *
       */
-     
-     
-     
-     
-     
-     
 
-     
+     int count = trajIterator->getCount();
+     int shouldbe = ((maxT-starttime)/dt);
+     cout  << " trajectories count: " << count << endl;
+     cout << "t0 = 0 , tmax = " << maxT <<" dt= " << dt << ", so in datafiles should be: 2*"<< shouldbe << " points"<<endl;
+     if( shouldbe*2 == count) {
+      cout << "it is! all ok"; 
+     }
+     else {
+      cout << "it isnt! " << count << " != " << shouldbe << endl;
+      delete trajIterator;
+      return -1;
+     }
 
 
+
+
+
+
+
+     delete trajIterator;
 
 
 
      ///===================================================================================================
-     
-     
+
+
      sys.finish();
      sys.printTimeSummary();
 

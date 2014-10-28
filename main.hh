@@ -12,6 +12,8 @@
 #include "tools/Datafile.hh"
 #include "sim/Simulation.hh"
 
+#include "tools/TrajectoriesDatafilesIterator.hh"
+
 using namespace std;
 
 

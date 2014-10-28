@@ -1,7 +1,7 @@
 #ifndef __EDF_HH__
 #define __EDF_HH__
 
-#include "Settings.hh"
+#include "../core/Settings.hh"
 
 #include <vector>
 #include <algorithm>
@@ -27,7 +27,7 @@ private:
 
      double time;
      void init();
-     void save();
+     //void save();
      
      // check for NaN
      bool isNan(volatile double &);
