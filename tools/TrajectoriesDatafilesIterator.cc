@@ -124,6 +124,8 @@ void TrajectoriesDatafilesIterator::open()
      }
 
      cout << endl << endl << " opened trajectories files: " << getNumTrajectories() << endl;
+     
+     
 }
 
 

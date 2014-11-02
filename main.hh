@@ -14,6 +14,9 @@
 
 #include "tools/TrajectoriesDatafilesIterator.hh"
 
+
+#include "analysis/Analysis.hh"
+
 using namespace std;
 
 

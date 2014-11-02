@@ -25,7 +25,7 @@ private:
 
      bool alreadySaved;
 
-     double time;
+     //double time;
      void init();
      //void save();
      
@@ -40,16 +40,14 @@ private:
      
 public:
 
-     EDF ( Settings* );
+     EDF ( );
      virtual ~EDF();
 
 
      void fill ( double x );
      void close();
 
-     void setTime ( double t ) {
-          if ( t>=0.0 ) this->time = t;
-     }
+
      
      void save();
 
