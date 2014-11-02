@@ -47,11 +47,11 @@ void EDF::close()
 
 
 
-void EDF::calculate()
+void EDF::sort()
 {
-     cout << "recalculating EDF"<<endl;
+//      cout << "recalculating EDF"<<endl;
 
-     sort ( this->values->begin(), this->values->end() );
+     ::sort ( this->values->begin(), this->values->end() );
 //      size_t size = this->values->size();
      //cout << " vector size: "<< size <<endl;
 
@@ -76,7 +76,7 @@ bool EDF::isOk ( volatile double &x )
 
 void EDF::save()
 {
-     this->calculate();
+     this->sort();
 
 
      // ....
@@ -106,4 +106,14 @@ void EDF::save()
 }
 
 
+vector< double >* EDF::getValues()
+{
+  return this->values;
+}
+
+vector< double >* EDF::getValuesSorted()
+{
+  this->sort();
+  return this->getValues();
+}
 

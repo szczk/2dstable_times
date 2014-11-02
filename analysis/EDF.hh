@@ -36,7 +36,7 @@ private:
      bool isOk(volatile double &);
      
      
-     void calculate();
+     void sort();
      
 public:
 
@@ -47,10 +47,10 @@ public:
      void fill ( double x );
      void close();
 
-
-     
      void save();
-
+     
+     vector<double> * getValues();
+     vector<double> * getValuesSorted();
 };
 
 #endif
