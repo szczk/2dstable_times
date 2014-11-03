@@ -93,13 +93,13 @@ int main ( int argc, char **argv )
 //        // loop over datafiles and fill analysis classes
        for( auto f = files->begin(); f!=files->end(); ++f) {
        
-	 double x = (*f)->read();
-	 double y = (*f)->read();
+            double x = (*f)->read();
+            double y = (*f)->read();
 	 //cout << "(" << x << ","<<y<<")"<<endl;
 	 
 	 
-	 meanR->add(x,y);
-	 marginalDistribution->add(x,y);
+            meanR->add(x,y);
+            marginalDistribution->add(x,y);
        }
        
        rsqrd->push_back(meanR);
