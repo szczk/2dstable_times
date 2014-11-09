@@ -60,29 +60,29 @@ void Simulation::run ( Datafile* datafile )
 
 //      cout << "starting sim " <<endl;
 
-     
+
      double alpha = this->settings->getJumpsParameter();
      double sigma = this->settings->getNoiseIntensity();
 
-     
+
      double t = this->settings->getStartTime();
-     double endTime = this->settings->get("maxT");
+     double endTime = this->settings->get ( "maxT" );
      double dt = this->settings->getDt();
 
-     
+
      double dL = exp ( log ( dt ) /alpha ); //pow(dt, 1.0/alpha);
 
-     
+
      int noiseType = settings->get ( "NOISE_TYPE" );
 
 
      do {
-	  //save x and y as pair
-	  datafile->write(X.x);
-	  datafile->write(X.y); 
-	  
-	  
-	  
+          //save x and y as pair
+          datafile->write ( X.x );
+          datafile->write ( X.y );
+
+
+
           double * v ;
 // cout << "t= " <<t << endl;
 
@@ -100,21 +100,22 @@ void Simulation::run ( Datafile* datafile )
           // grad V(x,y)
           vec potential = ( * ( this->potential ) ) ( X );
 
-	  // calkowanie numeryczne  
+          // calkowanie numeryczne
 
           X.x += -potential.x*dt  + v[0]*dL;
           X.y += -potential.y*dt  + v[1]*dL;
 
 
-	  // dla odpowiednio duzych r 
-	  // przechodzimy na obliczenie dokladne czesci deterministrycznej + dodanie czesci stochastycznej
-	  //  x^2+y^2>  pow(10.,3./(c-2.+0.01)))
-	  
+          // dla odpowiednio duzych r
+          // przechodzimy na obliczenie dokladne czesci deterministrycznej + dodanie czesci stochastycznej
+          //  x^2+y^2>  pow(10.,3./(c-2.+0.01)))
+
 
 
           delete[] v;
           t+= dt;
-	  
+
      } while ( t <= endTime );
 
 }
+

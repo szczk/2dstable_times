@@ -17,11 +17,11 @@ class MeanRsquared {
 
 private:
      RunningStat * runningAverage;
-     double t;
+     //double t;
 
 public:
 
-     MeanRsquared ( double t );
+     MeanRsquared ( );
      ~MeanRsquared();
 
 
@@ -33,7 +33,7 @@ public:
      }
 
      
-     double getT() { return this->t;}
+     //double getT() { return this->t;}
 };
 
 #endif

@@ -11,7 +11,7 @@ beta = 1.0
 starttime=0.0
 
 # end time
-maxT = 10.0
+maxT = 5.0
 
 
 # time step

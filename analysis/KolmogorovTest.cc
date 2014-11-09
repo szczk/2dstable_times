@@ -60,7 +60,7 @@ double KolmogorovTest::calculate ( EDF* edf1 , EDF* edf2)
    if (ok) {
       rdmax = max(rdmax,abs(rdiff));
       double z = rdmax * sqrt(rna*rnb/(rna+rnb));
-      prob = TMath::KolmogorovProb(z);
+//       prob = TMath::KolmogorovProb(z);
    }
       // debug printout
    //if (opt.Contains("D")) {

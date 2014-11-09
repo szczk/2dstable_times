@@ -5,7 +5,7 @@
 
 
 
-TrajectoriesDatafilesIterator::TrajectoriesDatafilesIterator ( Settings * s ) : settings ( s ), datafiles ( nullptr )
+TrajectoriesDatafilesIterator::TrajectoriesDatafilesIterator ( Settings * s ) : settings ( s ), datafiles ( nullptr ) , count(0)
 {
      this->init();
 

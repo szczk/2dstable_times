@@ -267,10 +267,18 @@ public:
           return this->filesPrefix.c_str();
      }
 
+     /**
+      * generate full prefix for output files quantifying files in
+      * a distinguishable manner
+      *
+      * does not contain storage path!
+      */
+     string getFullOutputFilesPrefix();
+
 
 
      string getDatafileName ( const char * , int nt );
-     string getMultiDatafileName(const char* folder, int multiOutputFilenum, int nt);
+     string getMultiDatafileName ( const char* folder, int multiOutputFilenum, int nt );
 };
 
 

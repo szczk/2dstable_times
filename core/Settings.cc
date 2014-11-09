@@ -51,7 +51,7 @@ void Settings::readCommandLineParameters ( int argc, char** argv )
                cout << " new data path: '" << argv[i+1] << "'" << endl;
                this->setDataPath ( argv[i+1] ) ;
           }
-          
+
           if ( strcmp ( "--prefix",argv[i] ) == 0  && ( i+1 ) < argc ) {
                cout << " new files prefix: '" << argv[i+1] << "'" << endl;
                this->setFilesPrefix ( argv[i+1] ) ;
@@ -60,28 +60,28 @@ void Settings::readCommandLineParameters ( int argc, char** argv )
           if ( strcmp ( "--n",argv[i] ) == 0  && ( i+1 ) < argc ) {
                cout << " new ntrajectories: '" << argv[i+1] << "'" << endl;
                this->setNtrajectories ( atoi ( argv[i+1] ) );
-          }       
-          
+          }
+
           if ( strcmp ( "--pt",argv[i] ) == 0  && ( i+1 ) < argc ) {
-	       int type = atoi ( argv[i+1] ) ;
-	       if(type!=2 && type!=4) type = 1;
+               int type = atoi ( argv[i+1] ) ;
+               if ( type!=2 && type!=4 ) type = 1;
                cout << " new potential type: '" << type << "'" << endl;
-               this->set ("POTENTIAL_TYPE", type );
+               this->set ( "POTENTIAL_TYPE", type );
           }
-          
+
           if ( strcmp ( "--nt",argv[i] ) == 0  && ( i+1 ) < argc ) {
-	       int type = atoi ( argv[i+1] ) ;
-	       if(type!=1 && type!=2 && type!=3 ) type = 1;
+               int type = atoi ( argv[i+1] ) ;
+               if ( type!=1 && type!=2 && type!=3 ) type = 1;
                cout << " new noise type: '" << type << "'" << endl;
-               this->set ("NOISE_TYPE", type) ;
+               this->set ( "NOISE_TYPE", type ) ;
           }
-          
+
           // usunac kiedy nie bedzie juz potrzebne
           if ( strcmp ( "--data_file_num",argv[i] ) == 0  && ( i+1 ) < argc ) {
                this->setMultipleOutputFilenum ( atoi ( argv[i+1] ) );
           }
-          
-          
+
+
 
      }
 }
@@ -104,7 +104,7 @@ void Settings:: init()
      this->setStoragePath ( "./" );
      this->setTmpPath ( "/tmp/" );
      this->setDataPath ( "./" );
-     this->setFilesPrefix("");
+     this->setFilesPrefix ( "" );
      this->loadFromFile();
 }
 
@@ -146,17 +146,16 @@ void Settings:: loadFromFile()
                          //string trimmed to 0
                          continue;
                     }
-                    
-                    
+
+
                     // read non-double/non-float values from settings
-                    if( strcmp ( paramName.c_str(), "datafile_name_template" ) == 0 ) {
-                      sline >> datafileNameTemplate;
-                      cout << datafileNameTemplate << endl;
+                    if ( strcmp ( paramName.c_str(), "datafile_name_template" ) == 0 ) {
+                         sline >> datafileNameTemplate;
+                         cout << datafileNameTemplate << endl;
+                    } else {
+                         sline >> paramValue;
+                         this->parameters.insert ( pair<string,paramsType> ( paramName,paramValue ) );
                     }
-                    else {
-                      sline >> paramValue;                                                            
-                      this->parameters.insert ( pair<string,paramsType> ( paramName,paramValue ) );
-                    }                    
                }
 
           }
@@ -228,17 +227,18 @@ string  Settings::normalizePath ( const char* str )
 
 
 
-string Settings::getDatafileName(const char* folder, int nt) {
-  
+string Settings::getDatafileName ( const char* folder, int nt )
+{
+
      char dataFile[200];
-     
+
      double alpha = getJumpsParameter();
      double beta = getWaitingTimesParameter();
      double noise = getNoiseIntensity();
-     int noiseType = (int) get("NOISE_TYPE");
-     int potentialType = (int) get("POTENTIAL_TYPE");
-     
-     
+     int noiseType = ( int ) get ( "NOISE_TYPE" );
+     int potentialType = ( int ) get ( "POTENTIAL_TYPE" );
+
+
      if ( this->multipleOutputs() ) {
           //cout << " multiple outputs! generating filename #" << this->getMultipleOutputFilenum() <<endl;
           //wielokrotny output, wyjsciowy plik dat musi miec numerek przyslany z zewnatrz
@@ -247,22 +247,38 @@ string Settings::getDatafileName(const char* folder, int nt) {
           // wszystko do jednego pliku
           sprintf ( dataFile,"%s/%s_a%1.2f_b%1.2f_s%1.2f_nt%i_pt%i_tr%i.dat",folder, getFilesPrefix(),alpha ,beta , noise , noiseType, potentialType, nt );
      }
-     return string(dataFile);
+     return string ( dataFile );
 }
 
-string Settings::getMultiDatafileName(const char* folder, int multiOutputFilenum, int nt) {
-  
+string Settings::getMultiDatafileName ( const char* folder, int multiOutputFilenum, int nt )
+{
+
      char dataFile[200];
-     
+
      double alpha = getJumpsParameter();
      double beta = getWaitingTimesParameter();
      double noise = getNoiseIntensity();
-     int noiseType = (int) get("NOISE_TYPE");
-     int potentialType = (int) get("POTENTIAL_TYPE");
-     
+     int noiseType = ( int ) get ( "NOISE_TYPE" );
+     int potentialType = ( int ) get ( "POTENTIAL_TYPE" );
+
      //cout << " multiple outputs! generating filename #" << this->getMultipleOutputFilenum() <<endl;
-     
+
      sprintf ( dataFile,"%s/%s_a%1.2f_b%1.2f_s%1.2f_nt%i_pt%i_%i_tr%i.dat",folder, getFilesPrefix(),alpha ,beta , noise , noiseType, potentialType, multiOutputFilenum,nt );
 
-     return string(dataFile);
+     return string ( dataFile );
+}
+
+
+string Settings::getFullOutputFilesPrefix()
+{
+     char fullPrefix[200];
+
+     double alpha = getJumpsParameter();
+     double beta = getWaitingTimesParameter();
+     double noise = getNoiseIntensity();
+     int noiseType = ( int ) get ( "NOISE_TYPE" );
+     int potentialType = ( int ) get ( "POTENTIAL_TYPE" );
+
+     sprintf ( fullPrefix,"%s_a%1.2f_b%1.2f_s%1.2f_nt%i_pt%i", getFilesPrefix(),alpha ,beta , noise , noiseType, potentialType );
+     return string ( fullPrefix );
 }

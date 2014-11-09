@@ -3,10 +3,10 @@
 
 
 
-MeanRsquared::MeanRsquared ( double t ) : runningAverage(nullptr)
+MeanRsquared::MeanRsquared (  ) : runningAverage(nullptr)
 {
   this->runningAverage = new RunningStat();
-  this->t = t;
+  //this->t = t;
 }
 
 
