@@ -62,20 +62,7 @@ int main ( int argc, char **argv )
 
 
 
-// 
-// 
-// 
-//      for ( auto it = marginals->begin(); it!= marginals->end(); ++it ) {
-//           MarginalDistributions * distributions = ( *it );
-// 
-//           // cout << "t = " << meanR->getT() << "\t < r^2 >  = " << meanR->getMeanValue() <<endl;
-// 
-//           //test << meanR->getT() << "\t" << meanR->getMeanValue() << endl;
-// 
-//           delete distributions;
-//      }
-// 
-//      delete marginals;
+
 
 
      delete analysis;

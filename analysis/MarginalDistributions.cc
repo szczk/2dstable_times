@@ -4,7 +4,7 @@
 
 
 
-MarginalDistributions::MarginalDistributions ( double t )
+MarginalDistributions::MarginalDistributions ( double t ) : marginalX(nullptr), marginalY(nullptr)
 {
      this->t = t;
      this->marginalX = new EDF();

@@ -2,11 +2,15 @@
 #define __ANALYSIS__
 
 #include <map>
+#include <vector>
 
 #include "../core/Settings.hh"
 #include "../tools/TrajectoriesDatafilesIterator.hh"
 
 #include "MeanRsquared.hh"
+#include "MarginalDistributions.hh"
+
+#include "KolmogorovTest.hh"
 
 using namespace std;
 
@@ -29,6 +33,7 @@ private:
 
      // analysis modules mapped by time
      map<double, MeanRsquared *> *meanR;
+     vector<MarginalDistributions*> * marginalDistributions;
      
      
     
