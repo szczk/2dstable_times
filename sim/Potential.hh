@@ -44,7 +44,12 @@ public:
   virtual vec operator()(const vec);
   
   
+  // x^2+y^2>  pow(10.,3./(c-2.+0.01))) 
+  virtual bool inLimit( const vec X ) = 0;
   
+
+  virtual vec getExact(const vec X, double dt) = 0;
+ 
 };
 
 

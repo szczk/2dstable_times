@@ -57,18 +57,6 @@ void Analysis::save()
          
          cout << "saving marginalDistributions"<<endl;
          
-//                   cout << "storagepath="  << storagePath <<endl;
-//          cout << "filePrefix="<< filePrefix <<endl;
-         
-         sprintf ( fileName,"%s/%s_KStest_X.txt",this->settings->getStoragePath(), this->settings->getFullOutputFilesPrefix().c_str() );        
-         ofstream ksXout(fileName);
-         
-//          cout << "storagepath="  << storagePath <<endl;
-//          cout << "filePrefix="<< filePrefix <<endl;
-         sprintf ( fileName,"%s/%s_KStest_Y.txt",this->settings->getStoragePath(), this->settings->getFullOutputFilesPrefix().c_str() );        
-         ofstream ksYout(fileName);         
-         
-         
          
          double dt = this->settings->getDt();
          double deltaT = this->settings->get("KSTEST_DELTA_T"); //time interval between two distibutions
@@ -81,6 +69,46 @@ void Analysis::save()
          
          cout << " DELTA_T = " << deltaT << "\t delta N = " << deltaN << endl;
          
+         
+         
+         
+//                   cout << "storagepath="  << storagePath <<endl;
+//          cout << "filePrefix="<< filePrefix <<endl;
+         
+         sprintf ( fileName,"%s/%s_KStest_X.txt",this->settings->getStoragePath(), this->settings->getFullOutputFilesPrefix().c_str() );        
+         ofstream ksXout(fileName);
+         
+         
+         
+         
+         char gnuplotName[200];
+         sprintf ( gnuplotName,"%s/%s_KStest_X.plt",this->settings->getStoragePath(), this->settings->getFullOutputFilesPrefix().c_str() );        
+         ofstream ksXplt( gnuplotName);
+         
+         
+         ksXplt << "reset\n";
+         
+         ksXplt << "set title ' {/Symbol a} = " << this->settings->getJumpsParameter();
+         ksXplt << " {/Symbol b} = " << this->settings->getWaitingTimesParameter();
+         ksXplt << " {/Symbol D}t = " << deltaT << "'\n";
+         
+         ksXplt << "set terminal post eps size 12,7 enhanced color font 'Helvetica,35' linewidth 2;\n";
+         ksXplt << "set output \""<< this->settings->getFullOutputFilesPrefix() << "_KStest_X.eps\"\n";
+         
+         ksXplt << "set xlabel \"t\"\n";
+         ksXplt << "set ylabel \"K-S D\"\n";
+
+         ksXplt << "plot './"<<this->settings->getFullOutputFilesPrefix()<<"_KStest_X.txt' using 1:2 w lp notitle\n";
+         
+         
+//          cout << "storagepath="  << storagePath <<endl;
+//          cout << "filePrefix="<< filePrefix <<endl;
+         sprintf ( fileName,"%s/%s_KStest_Y.txt",this->settings->getStoragePath(), this->settings->getFullOutputFilesPrefix().c_str() );        
+         ofstream ksYout(fileName);         
+         
+         
+         
+
          ksXout <<"# t \t K-S test D (marginal X distr, delta T = " << deltaT<<")\n";
          ksYout <<"# t \t K-S test D (marginal Y distr, delta T = " << deltaT<<")\n";
          
@@ -114,6 +142,8 @@ void Analysis::save()
          
          ksXout.close();
          ksYout.close();
+         
+         ksXplt.close();
      }
      
      

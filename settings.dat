@@ -40,5 +40,5 @@ NOISE_TYPE = 1
 
 
 # 1D Kolmogorov test delta T
-KSTEST_DELTA_T = 0.02
+KSTEST_DELTA_T = 0.06
 

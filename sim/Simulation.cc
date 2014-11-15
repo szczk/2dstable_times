@@ -81,37 +81,58 @@ void Simulation::run ( Datafile* datafile )
           datafile->write ( X.x );
           datafile->write ( X.y );
 
+            double * v ;
+            switch ( noiseType ) {
+            case 1:
+                v = rand->getAlphaStableVector ( alpha, sigma );
+                break;
+            case 2:
+            default:
+                v = rand->getDicreteAlphaStableVector ( alpha, sigma );
+                break;
+            }
+
+          if(  this->potential->inLimit( X )  ) {
+          
 
 
-          double * v ;
-// cout << "t= " <<t << endl;
 
-          switch ( noiseType ) {
-          case 1:
-               v = rand->getAlphaStableVector ( alpha, sigma );
-               break;
-          case 2:
-          default:
-               v = rand->getDicreteAlphaStableVector ( alpha, sigma );
-               break;
-          }
+                // grad V(x,y)
+                vec potential = ( * ( this->potential ) ) ( X );
 
+                // calkowanie numeryczne
 
-          // grad V(x,y)
-          vec potential = ( * ( this->potential ) ) ( X );
+                X.x += -potential.x*dt  + v[0]*dL;
+                X.y += -potential.y*dt  + v[1]*dL;
 
-          // calkowanie numeryczne
-
-          X.x += -potential.x*dt  + v[0]*dL;
-          X.y += -potential.y*dt  + v[1]*dL;
-
-
-          // dla odpowiednio duzych r
+               
+          } else {
+                      // dla odpowiednio duzych r
           // przechodzimy na obliczenie dokladne czesci deterministrycznej + dodanie czesci stochastycznej
           //  x^2+y^2>  pow(10.,3./(c-2.+0.01)))
+            //
+            
+            cout << "  out of limit! " <<endl;
+            //cout << " X = " << X.x <<"\t Y = " << X.y <<endl;
+              
+              //calculate exact value by solving diff equat. 
+              // for X[t] Y[t]
+              // with X[0] = x, Y[0]=y  
+              // so now we are calculating X[dt] Y[dt]
+            
+              vec newX = this->potential->getExact( X, dt );
 
-
-
+            //cout << " new X = " << newX.x <<"\t new Y = " << newX.y <<endl;
+            //cout << " noise: " << v[0] << "\t" << v[1]<<endl;
+            //cout << " dL = " << dL <<endl;
+            
+            X.x = newX.x + v[0]*dL;
+            X.y = newX.y + v[1]*dL;
+            
+            //cout << "with noise: X = " << X.x <<"\t Y = " << X.y <<endl;
+          }
+          
+          
           delete[] v;
           t+= dt;
 

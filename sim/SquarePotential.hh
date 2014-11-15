@@ -47,10 +47,24 @@ public:
      }
 
 
-     virtual const char* toString() {
+      const char* toString() {
           return "V(x,y) = 1/2  (x^2 + y^2)";
      }
 
+     bool inLimit( vec X) {
+         return true;
+     }
+     
+     vec getExact(const vec X, double dt) {
+       
+         vec NX;
+         
+         NX.x = exp(-dt) * X.x;
+         NX.y = exp(-dt) * X.y;
+         
+         
+         return NX;
+     }
 };
 
 

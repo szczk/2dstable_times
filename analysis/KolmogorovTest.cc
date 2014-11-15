@@ -4,7 +4,17 @@
 
 
 
-// 
+/*
+The returned value prob is a calculated confidence level which gives a
+ statistical test for compatibility of a and b.
+ Values of prob close to zero are taken as indicating a small probability
+ of compatibility. For two point sets drawn randomly from the same parent
+ distribution, the value of prob should be uniformly distributed between
+ zero and one.
+   in case of error the function return -1
+   If the 2 sets have a different number of points, the minimum of
+   the two sets is used.
+  */
 
 double KolmogorovTest::calculate ( EDF* edf1 , EDF* edf2)
 {
