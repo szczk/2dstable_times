@@ -35,21 +35,23 @@ private:
      map<double, MeanRsquared *> *meanR;
      map<double, MarginalDistributions *> *marginalDistributions;
      //vector<MarginalDistributions*> * marginalDistributions;
-     
-     
-    
+
+
+
      void initAnalysis();
      void deleteAnalysis();
-     
-     
+
+
      bool calculated;
 
 //      void checkDatafiles();
+
+
+     void saveMeanRTestResults();
      
      
-     
-     void saveKolmogorovTestResults(double deltaT);
-     
+     void saveKolmogorovTestResults ( double deltaT );
+
 
 public:
      Analysis ( Settings * );
@@ -72,21 +74,21 @@ public:
      /*
       * Pass an open datafile to be iterated over t and filled from
       */
-     void fillFromFile(Datafile *);
-     
+     void fillFromFile ( Datafile * );
+
      /**
       * add data for a given time point t
       */
-     void fill( double t, double x, double y);
-     
+     void fill ( double t, double x, double y );
+
      /**
       * Calculate everything that needs to be calculated
       */
      void calculate();
 
 
-     
-     
+
+
      /**
       * Save everything that needs to be saved.
       * calculate() should be manuall called first

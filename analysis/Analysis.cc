@@ -25,37 +25,18 @@ void Analysis::save()
      cout << "Analysis::save()"<<endl;
 
 
-     char fileName[200];
-     const char * filePrefix = this->settings->getFullOutputFilesPrefix().c_str();
-     const char * storagePath = this->settings->getStoragePath();
-
-
 
      // do save
      if ( this->meanR!=nullptr ) {
           cout << "saving meanR"<<endl;
 
-          sprintf ( fileName,"%s/%s_mean_r_squared.txt",storagePath, filePrefix );
-
-          ofstream output ( fileName );
-
-          output << "# t\t<x^2 + y^2>\n";
-
-          for ( auto it = meanR->begin(); it!= meanR->end(); ++it ) {
-               MeanRsquared * mr = ( it->second );
-
-//                cout << "t = " << it->first  << "\t < r^2 >  = " << mr->getMeanValue() <<endl;
-
-               output << it->first << "\t" << mr->getMeanValue() << endl;
-          }
-          output.close();
+          this->saveMeanRTestResults();
      }
 
 
      if ( this->marginalDistributions!=nullptr ) {
 
           cout << "saving marginalDistributions"<<endl;
-
 
 //           double deltaT = this->settings->get ( "KSTEST_DELTA_T" ); //time interval between two distibutions
 
@@ -67,7 +48,7 @@ void Analysis::save()
           this->saveKolmogorovTestResults ( 0.1 );
           this->saveKolmogorovTestResults ( 0.15 );
           this->saveKolmogorovTestResults ( 0.2 );
-	  this->saveKolmogorovTestResults ( 0.3 );
+          this->saveKolmogorovTestResults ( 0.3 );
      }
 
 
@@ -331,3 +312,62 @@ void Analysis::saveKolmogorovTestResults ( double deltaT )
 }
 
 
+
+void Analysis::saveMeanRTestResults()
+{
+
+     char datafileName[200];
+     char dataFullPath[200];
+     char datafileNamePlot[200];
+
+
+
+     sprintf ( datafileName,"%s_mean_r_squared.txt", this->settings->getFullOutputFilesPrefix().c_str() );
+     sprintf ( dataFullPath,"%s/%s", this->settings->getStoragePath() , datafileName );
+     ofstream output ( dataFullPath );
+     output << "# t\t<x^2 + y^2>\n";
+
+
+     sprintf ( datafileNamePlot,"%s/%s_mean_r_squared.plt",this->settings->getStoragePath(), this->settings->getFullOutputFilesPrefix().c_str() );
+     ofstream meanRplt ( datafileNamePlot );
+
+
+     meanRplt << "reset\n";
+
+     meanRplt << "set title ' <r^2>  {/Symbol a} = " << this->settings->getJumpsParameter();
+     meanRplt << " {/Symbol b} = " << this->settings->getWaitingTimesParameter();
+     meanRplt << "'\n";
+
+     meanRplt << "set terminal post eps size 12,7 enhanced color font 'Helvetica,35' linewidth 2;\n";
+     meanRplt << "set output \""<< this->settings->getFullOutputFilesPrefix() << "_mean_r_squared.eps\"\n";
+
+     meanRplt << "set xlabel \"t\"\n";
+     meanRplt << "set ylabel \"<r^2>\"\n";
+
+     meanRplt << "plot './"<< datafileName <<"' using 1:2 w lp notitle\n";
+     meanRplt.close();
+
+     //calculate derivative at the same time 
+     
+     // f'(x) = (f(x-h) + f(x+h))/(2h) 
+     // backward derivative
+     // f'(x) = (f(x) - f(x-h))/(h) 
+     
+     //double previousValue = 0.0;
+     //double h = this->settings->getDt();
+     
+     for ( auto it = meanR->begin(); it!= meanR->end(); ++it ) {
+          MeanRsquared * mr = ( it->second );
+//                cout << "t = " << it->first  << "\t < r^2 >  = " << mr->getMeanValue() <<endl;
+	  double mean = mr->getMeanValue();
+	  
+	  //double deriv = (mean - previousValue)/h;
+	  
+          output << it->first << "\t" << mean << "\t" << "\n";
+	  //previousValue = mean;
+     }
+    // output.flush();
+     output.close();
+
+
+}

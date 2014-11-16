@@ -65,7 +65,7 @@ echo ------------------------------------------------------
 
 echo " running job... "
 
-cd $PBS_O_HOME/2descape
+cd $PBS_O_HOME/2dstable_times
 
 # / tmp: /mnt/lustre/scratch/people/ufszczep/";
 # // storage: /storage/ufszczep/
@@ -89,7 +89,7 @@ module add gcc/4.8.0
 module add gsl
 #module add libs/glibc/2.7
 
-./generator.x --alpha ${alpha} --noise ${sigma} --storage "$SCRATCH/escape3"  --tmp "$SCRATCH" --prefix "dt05" --data_file_num ${num}  > $logs/escape_2d_a${alpha}_s${sigma}_nt1_n${num}.log
+./generator.x --alpha ${alpha} --beta ${beta} --noise ${sigma} --storage "$SCRATCH/stable_times"  --tmp "$SCRATCH" --data_file_num ${num}  > $logs/stable_times_a${alpha}_s${sigma}_nt1_n${num}.log
 
 
 

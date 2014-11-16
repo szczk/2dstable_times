@@ -20,7 +20,7 @@
 touch jobs_ids.txt
 
 tmpdir="/tmp/"
-storagedir="./"
+storagedir="./data"
 threads=4
 # /mnt/lustre/scratch/people/ufszczep/
 # /storage/ufszczep/
@@ -44,24 +44,27 @@ echo "\n"
 export LC_NUMERIC="en_US.UTF-8"
 
 
-for alpha in 0.7 # 0.7 1.0 1.2 1.4 1.5 1.6 1.7 1.8 2.0  #$(seq -w 0.5 0.5 2.0)
+for alpha in 1.9 # 0.7 1.0 1.2 1.4 1.5 1.6 1.7 1.8 2.0  #$(seq -w 0.5 0.5 2.0)
 do
-   for sigma in 2.0 2.2 2.4 2.6 2.8 3.0 3.4 3.8 4.0 4.4 5.0  #$(seq -w 0.2 0.2 5.0)
-    do
-      for num in $(seq 1 10)
-        do
-	  echo "alpha = $alpha, sigma = $sigma, n = $num"
-	  file="a_"$alpha"_s_"$sigma"_escape_"$num".pbs"
+   for beta in 1.0 
+   do
+       for sigma in 1.0  #$(seq -w 0.2 0.2 5.0)
+       do
+	  for num in $(seq 1 10)
+	      do
+		echo "alpha = $alpha, beta= $beta, sigma = $sigma, n = $num"
+		file="a_"$alpha"_s_"$sigma"_escape_"$num".pbs"
 
-		  if [ ${USER} = "ufszczep" ];
-		  then
-		    cat pbs_template.tpl | sed -e "s/\${tmp}/$tmpdir/g" -e "s/\${storage}/$storagedir/g" -e "s/\${alpha}/$alpha/g" -e "s/\${sigma}/$sigma/g" -e "s/\${threads}/$threads/g" -e "s/\${num}/$num/g" > $file
-		    qsub -f $file >> jobs_ids.txt
-		  else
-		    ./generator.x --alpha $alpha --noise $sigma --storage "$storagedir" --tmp "$tmpdir" --threads $threads --data_file_num $num
-		  fi
-      done
-    done
+			if [ ${USER} = "ufszczep" ];
+			then
+			  cat pbs_template.tpl | sed -e "s/\${tmp}/$tmpdir/g" -e "s/\${storage}/$storagedir/g" -e "s/\${alpha}/$alpha/g" -e "s/\${sigma}/$sigma/g" -e "s/\${threads}/$threads/g" -e "s/\${num}/$num/g" > $file
+			  qsub -f $file >> jobs_ids.txt
+			else
+			  ./generator.x --alpha $alpha --beta $beta --noise $sigma --storage "$storagedir" --tmp "$tmpdir" --data_file_num $num
+			fi
+	      done
+       done
+   done
 done
 
 
