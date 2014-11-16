@@ -22,7 +22,7 @@
 #          Set the name of the job (up to 15 characters, 
 #          no blank spaces, start with alphanumeric character)
 
-#PBS -N 2d_escape_a_${alpha}_s_${sigma}_${num}
+#PBS -N 2dstable_times_a${alpha}_b${beta}_s${sigma}_${num}
 
 #          By default, the standard output and error streams are sent
 #          to files in the current working directory with names:
