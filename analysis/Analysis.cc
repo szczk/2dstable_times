@@ -356,6 +356,8 @@ void Analysis::saveMeanRTestResults()
      //double previousValue = 0.0;
      //double h = this->settings->getDt();
      
+     double previousValue = 0.0;
+     
      for ( auto it = meanR->begin(); it!= meanR->end(); ++it ) {
           MeanRsquared * mr = ( it->second );
 //                cout << "t = " << it->first  << "\t < r^2 >  = " << mr->getMeanValue() <<endl;
@@ -363,8 +365,12 @@ void Analysis::saveMeanRTestResults()
 	  
 	  //double deriv = (mean - previousValue)/h;
 	  
+	  // skip extreme values
+	  if( mean < 10.0* previousValue) {
           output << it->first << "\t" << mean << "\t" << "\n";
-	  //previousValue = mean;
+	  }
+	  
+	  previousValue = mean;
      }
     // output.flush();
      output.close();

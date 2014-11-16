@@ -44,20 +44,21 @@ echo "\n"
 export LC_NUMERIC="en_US.UTF-8"
 
 
-for alpha in $(seq -w 0.5 0.5 2.0)
+for alpha in 1.5 1.7 1.9 2.0 
 do
-   for sigma in 3.0 3.2 3.4 4.0 4.4 5.0  #$(seq -w 0.2 0.2 5.0)
-    do
-      #for num in 1 # #$(seq 1 5)
-       # do
-#	  echo "alpha = $alpha, sigma = $sigma, n = $num"
-#	  file="a_"$alpha"_s_"$sigma"_escape_"$num".pbs"
-		    #./analysis.x --alpha $alpha --noise $sigma --storage "$STORAGE/escape2/" --data "$SCRATCH/escape/"  --tmp "$SCRATCH" --prefix "dt04" --data_file_num 5
-		 ./analysis.x --alpha $alpha --noise $sigma --storage "$STORAGE/escape_lf/" --data "$SCRATCH/escape2/"  --tmp "$SCRATCH" --prefix "dt04" --data_file_num 5
-      #done
-    done
+   for beta in 1.0 
+   do
+       for sigma in 1.0  #$(seq -w 0.2 0.2 5.0)
+       do
+	      if [ ${USER} = "ufszczep" ];
+	      then
+		./analysis.x --alpha $alpha --beta $beta --noise $sigma --storage "$STORAGE/2dstable_times/" --data "$SCRATCH/stable_times/"  --tmp "$SCRATCH"  --data_file_num 5
+	      else
+		./analysis.x --alpha $alpha --beta $beta --noise $sigma --storage "./results" --data "./data"  --tmp "/tmp" --data_file_num 10
+	      fi
+       done
+   done
 done
-
 
 
 #text=$(tr '\n' ':' <jobs_ids.txt)
