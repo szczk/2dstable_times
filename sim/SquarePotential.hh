@@ -47,23 +47,25 @@ public:
      }
 
 
-      const char* toString() {
+     const char* toString() {
           return "V(x,y) = 1/2  (x^2 + y^2)";
      }
 
-     bool inLimit( vec X) {
-         return true;
+     bool inLimit ( vec X ) {
+          // x^2+y^2>  pow(10.,3./(c-2.+0.01)))
+          //  10^(3/( 2.01 )) =~ 31.62
+          return ( ( X.x*X.x + X.y*X.y ) < 31.62 );
      }
-     
-     vec getExact(const vec X, double dt) {
-       
-         vec NX;
-         
-         NX.x = exp(-dt) * X.x;
-         NX.y = exp(-dt) * X.y;
-         
-         
-         return NX;
+
+     vec getExact ( const vec X, double dt ) {
+
+          vec NX;
+
+          NX.x = exp ( -dt ) * X.x;
+          NX.y = exp ( -dt ) * X.y;
+
+
+          return NX;
      }
 };
 

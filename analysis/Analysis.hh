@@ -44,6 +44,11 @@ private:
      bool calculated;
      bool inputOk;
      void checkDatafiles();
+     
+     
+     
+     void saveKolmogorovTestResults(double deltaT);
+     
 
 public:
      Analysis ( Settings * );

@@ -19,21 +19,21 @@ private:
      Settings * settings;
      Randoms * rand;
      Potential * potential;
-  
+
      void init();
      void cleanUp();
-     
-     
+
+
      void reset();
 
 public:
 
      Simulation ( Settings* s );
      ~Simulation();
-     
-     
-     
-     
+
+
+
+
      void run ( Datafile* datafile );
 
 

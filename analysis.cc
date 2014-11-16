@@ -28,7 +28,7 @@ int main ( int argc, char **argv )
      TrajectoriesDatafilesIterator * trajIterator = new TrajectoriesDatafilesIterator ( &settings );
 
 
-     
+
      // analysis
      Analysis * analysis = new Analysis ( &settings );
      // when deleting analysis, iterator will not be deleted!
@@ -43,17 +43,17 @@ int main ( int argc, char **argv )
 
 
      if ( analysis->inputOK() )  {
-       
+
           analysis->calculate();
-	  
+
           analysis->save();
 
           analysis->close();
      } else {
-	  cout << "Analysis input not ok!"<<endl;
-	  
-	  analysis->close();
-	  
+          cout << "Analysis input not ok!"<<endl;
+
+          analysis->close();
+
           return -1;
      }
 

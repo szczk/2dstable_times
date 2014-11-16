@@ -9,47 +9,47 @@ using namespace std;
 
 /**
  * 2D potential
- * 
- * 
+ *
+ *
  *  V(x,y) = 1/4  (x^2 + y^2)^2
- *    
+ *
  *  grad V(x,y) = [ x(x^2 + y^2) ,  y(x^2 + y^2)
- * 
- * 
+ *
+ *
  * !! tak naprawde zwraca gradient V(x,y) !!
  */
 class Potential {
-  
+
 private:
-  
-  
-  /**
-  * Initialize random number generator & stuff
-  */
-  void init();
 
-  /**
-  *  destroy everything and close
-  */
-  void destroy();
-  
-     
-     
+
+     /**
+     * Initialize random number generator & stuff
+     */
+     void init();
+
+     /**
+     *  destroy everything and close
+     */
+     void destroy();
+
+
+
 public:
-  Potential();
-  virtual ~Potential() =0 ;
-  
-  virtual const char * toString();
-  
-  virtual vec operator()(const vec);
-  
-  
-  // x^2+y^2>  pow(10.,3./(c-2.+0.01))) 
-  virtual bool inLimit( const vec X ) = 0;
-  
+     Potential();
+     virtual ~Potential() =0 ;
 
-  virtual vec getExact(const vec X, double dt) = 0;
- 
+     virtual const char * toString();
+
+     virtual vec operator() ( const vec );
+
+
+     // x^2+y^2>  pow(10.,3./(c-2.+0.01)))
+     virtual bool inLimit ( const vec X ) = 0;
+
+
+     virtual vec getExact ( const vec X, double dt ) = 0;
+
 };
 
 
