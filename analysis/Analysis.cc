@@ -2,7 +2,7 @@
 
 
 
-Analysis::Analysis ( Settings*s ) : settings ( s ), meanR ( nullptr ) ,  calculated ( nullptr ),inputOk ( false )
+Analysis::Analysis ( Settings*s ) : settings ( s ), meanR ( nullptr ), marginalDistributions ( nullptr ) ,  calculated ( nullptr )
 {
 
 
@@ -56,17 +56,18 @@ void Analysis::save()
 
           cout << "saving marginalDistributions"<<endl;
 
-          
-          double deltaT = this->settings->get ( "KSTEST_DELTA_T" ); //time interval between two distibutions
-          
-	  
-	  this->saveKolmogorovTestResults(0.02);
-	  this->saveKolmogorovTestResults(0.04);
-	  this->saveKolmogorovTestResults(0.06);
-	  this->saveKolmogorovTestResults(0.08);
-	  this->saveKolmogorovTestResults(0.1);
-	  this->saveKolmogorovTestResults(0.15);
-	  this->saveKolmogorovTestResults(0.2);
+
+//           double deltaT = this->settings->get ( "KSTEST_DELTA_T" ); //time interval between two distibutions
+
+
+          this->saveKolmogorovTestResults ( 0.02 );
+          this->saveKolmogorovTestResults ( 0.04 );
+          this->saveKolmogorovTestResults ( 0.06 );
+          this->saveKolmogorovTestResults ( 0.08 );
+          this->saveKolmogorovTestResults ( 0.1 );
+          this->saveKolmogorovTestResults ( 0.15 );
+          this->saveKolmogorovTestResults ( 0.2 );
+	  this->saveKolmogorovTestResults ( 0.3 );
      }
 
 
@@ -80,78 +81,74 @@ void Analysis::calculate()
           return;
      }
 
-     // iterate over time
-     double maxT = settings->get ( "maxT" );
-     double dt = settings->get ( "dt" );
-     double starttime = settings->get ( "starttime" );
-
-     cout << "Analysis::calculate(): time iteration start" <<endl;
-     //vector< MeanRsquared* > * rsqrd = new vector<MeanRsquared *>();
-     //vector< MarginalDistributions*>  * marginals = new vector<MarginalDistributions * > ();
-
-
-     vector<Datafile*>* files = this->trajIterator->getDatafiles();
-
-     // iterate over time moments
-     // fill analysis classes with (x,t)(t) data
-     for ( double t = starttime; t <= maxT;  t+=dt ) {
-
-          //cout << " t = " << t << endl;
-
-
-
-          MeanRsquared * mr = new MeanRsquared();
-          MarginalDistributions * marginalDistr = new MarginalDistributions ( t );
-
-//        // loop over datafiles and fill analysis classes
-          for ( auto f = files->begin(); f!=files->end(); ++f ) {
-
-               double x = ( *f )->read();
-               double y = ( *f )->read();
-//                cout << "(" << x << ","<<y<<")"<<endl;
-
-
-               mr->add ( x,y );
-               marginalDistr->add ( x,y );
-          }
-
-          this->meanR->insert ( std::make_pair ( t, mr ) );
-
-
-          this->marginalDistributions->push_back ( marginalDistr );
-
-     }
-     cout << "Analysis::calculate(): time iteration end" <<endl;
 
      calculated = true;
 }
 
 
-void Analysis::checkDatafiles()
+void Analysis::fillFromFile ( Datafile* f )
 {
-     double maxT = settings->get ( "maxT" );
-     double dt = settings->get ( "dt" );
-     double starttime = settings->get ( "starttime" );
+     if ( f==nullptr ) {
+          cout << "passed datafile is null!"<<endl;
+          throw -1;
+     }
+     if ( f->ok() ) {
 
-     int count = trajIterator->getCount();
-     int shouldbe = ( ( maxT-starttime ) /dt );
-     cout  << " trajectories count: " << count << endl;
-     cout << "t0 = 0 , tmax = " << maxT <<" dt= " << dt << ", so in datafiles should be: 2*"<< shouldbe << " points"<<endl;
-     if ( shouldbe*2 == count ) {
-          cout << "it is! all ok" << endl;
-          this->inputOk = true;
+          // iterate over time
+          double maxT = settings->get ( "maxT" );
+          double dt = settings->get ( "dt" );
+          double starttime = settings->get ( "starttime" );
+          for ( double t = starttime; t <= maxT;  t+=dt ) {
+//           cout << " t = " << t << endl;
+               double x = f->read();
+               double y = f->read();
+//           cout << "(" << x << ","<<y<<")"<<endl;
+               this->fill ( t,x,y );
+          }
+
+
      } else {
-          cout << "it isnt! " << count << " != " << shouldbe << endl;
-          this->inputOk = false;
+          cout << "passed datafile not ok!"<<endl;
      }
 }
 
 
-bool Analysis::inputOK()
+void Analysis::fill ( double t, double x, double y )
 {
-     //this->checkDatafiles();
-     return this->inputOk;
+
+     auto amr = this->meanR->find ( t );
+     auto amg = this->marginalDistributions->find ( t );
+
+     auto mrEnd = this->meanR->end();
+     auto mgEnd = this->marginalDistributions->end();
+
+
+     MeanRsquared * mr ;
+     MarginalDistributions * marginalDistr;
+
+     if ( amr==mrEnd ) {
+          mr = new MeanRsquared();
+          this->meanR->insert ( std::make_pair ( t, mr ) );
+     } else {
+          mr = amr->second;
+     }
+
+     if ( amg==mgEnd ) {
+          marginalDistr = new MarginalDistributions ( t );
+          this->marginalDistributions->insert ( std::make_pair ( t, marginalDistr ) );
+     } else {
+          marginalDistr = amg->second;
+     }
+
+
+     mr->add ( x,y );
+     marginalDistr->add ( x,y );
+
+
 }
+
+
+
 
 void Analysis::close()
 {
@@ -163,14 +160,11 @@ void Analysis::close()
 void Analysis::initAnalysis()
 {
      this->meanR = new map<double, MeanRsquared*>();
-     this->marginalDistributions = new vector<MarginalDistributions*>();
+     this->marginalDistributions = new map<double, MarginalDistributions*>();
 }
 
 void Analysis::deleteAnalysis()
 {
-
-
-
      if ( this->meanR!=nullptr ) {
           cout << "deleting meanR"<<endl;
 
@@ -185,13 +179,10 @@ void Analysis::deleteAnalysis()
           this->meanR = nullptr;
      }
 
-     //
-//
-
      if ( this->marginalDistributions!=nullptr ) {
           cout << "deleting marginalDistributions"<<endl;
           for ( auto it = marginalDistributions->begin(); it!= marginalDistributions->end(); ++it ) {
-               MarginalDistributions * distributions = ( *it );
+               MarginalDistributions * distributions = ( it->second );
 
                // cout << "t = " << meanR->getT() << "\t < r^2 >  = " << meanR->getMeanValue() <<endl;
 
@@ -199,12 +190,8 @@ void Analysis::deleteAnalysis()
 
                delete distributions;
           }
-
           delete marginalDistributions;
      }
-
-
-
 }
 
 
@@ -214,15 +201,15 @@ void Analysis::saveKolmogorovTestResults ( double deltaT )
 
      char datafileNameX[200];
      char datafileNameY[200];
-     
+
      char dataFullPathX[200];
      char dataFullPathY[200];
-     
+
      char datafileNameXplot[200];
      char datafileNameYplot[200];
 
      double dt = this->settings->getDt();
-     
+
      if ( deltaT< dt ) {
           deltaT= 0.02;
           cout << "deltaT not set in settings, defaulting to " << deltaT <<endl;
@@ -243,8 +230,8 @@ void Analysis::saveKolmogorovTestResults ( double deltaT )
 
 
      cout << "datafileNameX:" << datafileNameX<<"\n ksXout:" << dataFullPathX << "\nksXplt:"<< datafileNameXplot << endl;
-     
-     
+
+
      ksXplt << "reset\n";
 
      ksXplt << "set title ' marg. distr. X  {/Symbol a} = " << this->settings->getJumpsParameter();
@@ -268,10 +255,10 @@ void Analysis::saveKolmogorovTestResults ( double deltaT )
 
      sprintf ( datafileNameYplot,"%s/%s_KStest_Y_deltaT_%2.3f.plt",this->settings->getStoragePath(), this->settings->getFullOutputFilesPrefix().c_str(), deltaT );
      ofstream ksYplt ( datafileNameYplot );
-     
+
      cout << "datafileNameY:" << datafileNameY<<"\n ksYout:" << dataFullPathY << "\nksYplt:"<< datafileNameYplot << endl;
-     
-     
+
+
      ksYplt << "reset\n";
 
      ksYplt << "set title ' marg. distr. Y  {/Symbol a} = " << this->settings->getJumpsParameter();
@@ -285,43 +272,55 @@ void Analysis::saveKolmogorovTestResults ( double deltaT )
      ksYplt << "set ylabel \"K-S D\"\n";
 
      ksYplt << "plot './"<< datafileNameY <<"' using 1:2 w lp notitle\n";
-     
-     
-     
-     
-     
-     
-     
-     
+
+
+
+
+
+
+
+
      ksXout <<"# t \t K-S test D (marginal X distr, delta T = " << deltaT<<")\n";
      ksYout <<"# t \t K-S test D (marginal Y distr, delta T = " << deltaT<<")\n";
 
      int size = this->marginalDistributions->size() - deltaN;
 
+
+     //get the vector of keys from map
+     // this is done because simply calculating new double may not match the map keys (due to double being floating point)
+     // but if we get keys directly from map and use vector index it will always work
+     vector<double>* keys = new vector<double>();
+     for ( auto it = this->marginalDistributions->begin(); it != marginalDistributions->end(); ++it ) {
+          keys->push_back ( ( it )->first );
+     }
+
+
+
      for ( int c = 0; c < size ; c++ ) {
 
-          MarginalDistributions * distributions = this->marginalDistributions->at ( c );
+          double keyT = keys->at ( c );
+          MarginalDistributions * distributions = this->marginalDistributions->at ( keyT );
 
           double t = distributions->getT();
-          //double secondT = t + deltaT;
+
+//           double secondT = t + deltaT;
+          double keySecondT = keys->at ( c + deltaN );
           //bool secondTexists = ( this->marginalDistributions->count( secondT) == 1 );
-          MarginalDistributions * secondDist = this->marginalDistributions->at ( c + deltaN );
+          MarginalDistributions * secondDist = this->marginalDistributions->at ( keySecondT );
 
-          double secondT = secondDist->getT();
-
-//                   cout << "t = " << t << "\t second t  = " << secondT ;
+//        double secondT = secondDist->getT();
+//        cout << "t = " << t << "\t second t  = " << secondT ;
 
           //test << meanR->getT() << "\t" << meanR->getMeanValue() << endl;
 
-
           double KStestX = KolmogorovTest::calculate ( distributions->getXedf(), secondDist->getXedf() );
           double KStestY = KolmogorovTest::calculate ( distributions->getYedf(), secondDist->getYedf() );
-//                   cout << " KS x = " << KStestX << " \t KS y = " << KStestY << endl;
 
           ksXout << t <<"\t" << KStestX <<"\n";
           ksYout << t <<"\t" << KStestY <<"\n";
-
      }
+
+     delete keys;
 
 
      ksXout.close();

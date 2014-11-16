@@ -4,6 +4,7 @@
 #include <fstream>
 #include <vector>
 
+#include <sys/resource.h>
 
 #include "analysis/MeanRsquared.hh"
 #include "analysis/MarginalDistributions.hh"
@@ -25,14 +26,15 @@ int main ( int argc, char **argv )
      ///==================================================================================
 
      //open datafiles with trajectories
-     TrajectoriesDatafilesIterator * trajIterator = new TrajectoriesDatafilesIterator ( &settings );
+
+
+     //TrajectoriesDatafilesIterator * trajIterator = new TrajectoriesDatafilesIterator ( &settings );
 
 
 
      // analysis
      Analysis * analysis = new Analysis ( &settings );
      // when deleting analysis, iterator will not be deleted!
-     analysis->setDatafilesIterator ( trajIterator );
 
 
      //  < r^2>    x, y ,t
@@ -41,21 +43,73 @@ int main ( int argc, char **argv )
 
 
 
+     double ntrajectories = settings.getNtrajectories();
+     int tenPerc = ( ntrajectories>10 ) ? ( int ) ( ntrajectories*0.1 ) : 1;
+     cout << "opening trajectories files"<<endl;
 
-     if ( analysis->inputOK() )  {
 
-          analysis->calculate();
 
-          analysis->save();
 
-          analysis->close();
+     if ( settings.multipleOutputs() ) {
+          int maxNum = settings.getMultipleOutputFilenum();
+          bool first = true;
+          for ( int filenum = 1; filenum <= maxNum ; filenum++ ) {
+               for ( int nt =0; nt < ntrajectories ; nt++ ) {
+                    if ( nt%tenPerc==0 ) {
+                         cout << nt<<"/"<<ntrajectories<<endl;
+                    }
+
+                    string outputFile = settings.getMultiDatafileName ( settings.getDataPath(), filenum,  nt );
+                    cout << "opening " << outputFile << endl;
+
+                    Datafile * datafile = Datafile::open ( outputFile.c_str() );
+                    if ( datafile->ok() ) {
+
+
+                         analysis->fillFromFile ( datafile );
+
+//                          int count = datafile->getCount();
+//
+//                          if ( first ) {
+//                               this->count = count;
+//                          }
+//
+//                          if ( count != this->count ) {
+//                               cout << " non equal trajectory count! " << cout << " vs " << this->count << "!!!" << endl;
+//                               throw -1;
+//                          }
+//                          this->count = count;
+                    }
+                    delete datafile;
+               }
+          }
      } else {
-          cout << "Analysis input not ok!"<<endl;
+          for ( int nt =0; nt < ntrajectories ; nt++ ) {
 
-          analysis->close();
+               if ( nt%tenPerc==0 ) {
+                    cout << nt<<"/"<<ntrajectories<<endl;
+               }
 
-          return -1;
+               string outputFile = settings.getDatafileName ( settings.getDataPath(), nt );
+               cout << "opening " << outputFile << endl;
+               Datafile * datafile = Datafile::open ( outputFile.c_str() );
+               if ( datafile->ok() ) {
+                    analysis->fillFromFile ( datafile );
+               } else {
+                    delete datafile;
+               }
+          }
      }
+
+
+
+
+     analysis->calculate();
+
+     analysis->save();
+
+     analysis->close();
+
 
 
 
@@ -67,11 +121,16 @@ int main ( int argc, char **argv )
 
      delete analysis;
 
-     delete trajIterator;
+//      delete trajIterator;
 
 
 
      ///===================================================================================================
+
+     struct rlimit rp;
+     int code = getrlimit ( RLIMIT_NOFILE, &rp );
+     cout <<"return code:" << code << endl;
+     cout << "RLIMIT_NOFILE: soft:" << rp.rlim_cur << "\t hard:" << rp.rlim_max << endl;
 
 
      sys.finish();

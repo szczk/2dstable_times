@@ -48,7 +48,7 @@ for alpha in 0.7 # 0.7 1.0 1.2 1.4 1.5 1.6 1.7 1.8 2.0  #$(seq -w 0.5 0.5 2.0)
 do
    for sigma in 2.0 2.2 2.4 2.6 2.8 3.0 3.4 3.8 4.0 4.4 5.0  #$(seq -w 0.2 0.2 5.0)
     do
-      for num in $(seq 1 20)
+      for num in $(seq 1 10)
         do
 	  echo "alpha = $alpha, sigma = $sigma, n = $num"
 	  file="a_"$alpha"_s_"$sigma"_escape_"$num".pbs"

@@ -29,11 +29,12 @@ class Analysis {
 private:
      Settings * settings;
 
-     TrajectoriesDatafilesIterator * trajIterator;
+//      TrajectoriesDatafilesIterator * trajIterator;
 
      // analysis modules mapped by time
      map<double, MeanRsquared *> *meanR;
-     vector<MarginalDistributions*> * marginalDistributions;
+     map<double, MarginalDistributions *> *marginalDistributions;
+     //vector<MarginalDistributions*> * marginalDistributions;
      
      
     
@@ -42,8 +43,8 @@ private:
      
      
      bool calculated;
-     bool inputOk;
-     void checkDatafiles();
+
+//      void checkDatafiles();
      
      
      
@@ -57,21 +58,26 @@ public:
 
 
 
-     /**
-      * when deleting Analysis object, this datafile iterator will NOT be deleted!
-      */
-     void setDatafilesIterator ( TrajectoriesDatafilesIterator * iter ) {
-          if ( iter!=nullptr ) {
-               this->trajIterator = iter;
-               this->checkDatafiles();
-          }
-     }
+//      /**
+//       * when deleting Analysis object, this datafile iterator will NOT be deleted!
+//       */
+//      void setDatafilesIterator ( TrajectoriesDatafilesIterator * iter ) {
+//           if ( iter!=nullptr ) {
+//                this->trajIterator = iter;
+//                this->checkDatafiles();
+//           }
+//      }
 
-     /**
-      * 
+
+     /*
+      * Pass an open datafile to be iterated over t and filled from
       */
-     bool inputOK();
+     void fillFromFile(Datafile *);
      
+     /**
+      * add data for a given time point t
+      */
+     void fill( double t, double x, double y);
      
      /**
       * Calculate everything that needs to be calculated
@@ -79,6 +85,8 @@ public:
      void calculate();
 
 
+     
+     
      /**
       * Save everything that needs to be saved.
       * calculate() should be manuall called first
