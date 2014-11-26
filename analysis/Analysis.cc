@@ -358,7 +358,15 @@ void Analysis::saveMeanRTestResults()
      
      double previousValue = 0.0;
      
+     size_t meanRs = meanR->size();
+     int fitCount = meanRs > 100 ? 100 : meanRs;
+     double x[fitCount], y[fitCount];
+     
+     int ind = 0;
+     int c = 0;
      for ( auto it = meanR->begin(); it!= meanR->end(); ++it ) {
+         
+          double t = it->first;
           MeanRsquared * mr = ( it->second );
 //                cout << "t = " << it->first  << "\t < r^2 >  = " << mr->getMeanValue() <<endl;
 	  double mean = mr->getMeanValue();
@@ -366,14 +374,36 @@ void Analysis::saveMeanRTestResults()
 	  //double deriv = (mean - previousValue)/h;
 	  
 	  // skip extreme values
-	  if( mean < 10.0* previousValue) {
+	  if( mean < 5.0* previousValue) {
           output << it->first << "\t" << mean << "\t" << "\n";
 	  }
 	  
+	  
+	  if( c > meanRs - fitCount) {
+          y[ind] = mean;
+          x[ind] = t;
+          
+          ind++;
+      }
+	  
+	  
+	  
 	  previousValue = mean;
+      ++c;
      }
     // output.flush();
      output.close();
 
+     
+     double c0, c1;
+     int code = Utility::linearRegression(  x, y, fitCount-1, &c0, &c1 );
+
+     
+     cout << " fit code: " << code << endl;
+     cout << " c0: " << c0 << "\tc1:" << c1<<endl;
+     cout << "x[0] = " << x[0] << "\t x[count-2] = " << x[fitCount-2] << "\t x[count-1] =" << x[fitCount-1] <<endl;
+     cout << "y[0] = " << y[0] << "\t y[count-2] = " << y[fitCount-2] << "\t y[count-1] =" << y[fitCount-1] <<endl;
+     
+     cout << "set arrow from "<<x[0]<<","<< (c1 * x[0] + c0)<< " to "<< x[fitCount-2]<<","<< (x[fitCount-2]* c1 + c0) <<" nohead lt 1 lw 3"<<endl;
 
 }

@@ -6,6 +6,7 @@
 
 #include "../core/Settings.hh"
 #include "../tools/TrajectoriesDatafilesIterator.hh"
+#include "../tools/Utility.hh"
 
 #include "MeanRsquared.hh"
 #include "MarginalDistributions.hh"
