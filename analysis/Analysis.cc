@@ -125,7 +125,43 @@ void Analysis::fill ( double t, double x, double y )
      mr->add ( x,y );
      marginalDistr->add ( x,y );
 
+     
+     
+     if(false) {
+         
+        auto ahp = this->histogramProducers->find ( t );
+        auto aedf = this->edfProducers->find ( t );
 
+        auto hpEnd = this->histogramProducers->end();
+        auto edfEnd = this->edfProducers->end(); 
+         
+        
+        
+        HistogramsProducer * producer ;
+        EDFProducer * edfProducer;
+
+        if( ahp == hpEnd) {
+            cout << " new HP for t= " << t <<endl;
+            producer = new HistogramsProducer ( settings );
+            producer->setTime ( t );
+            this->histogramProducers->insert( std::make_pair(t, producer) ) ;
+        } else {
+            producer = ahp->second;
+        }
+        
+        if( aedf == edfEnd ) {
+            edfProducer = new EDFProducer ( settings );
+            edfProducer->setTime ( t );
+            this->edfProducers->insert( std::make_pair(t,edfProducer));
+        } else {
+            edfProducer = aedf->second;
+        }
+
+        
+        producer->fill(x,y);
+        edfProducer->fill(x,y);
+
+     }
 }
 
 
@@ -142,6 +178,14 @@ void Analysis::initAnalysis()
 {
      this->meanR = new map<double, MeanRsquared*>();
      this->marginalDistributions = new map<double, MarginalDistributions*>();
+     
+     
+     
+     
+     histogramProducers = new map<double, HistogramsProducer *>(); ;
+     edfProducers = new map<double, EDFProducer *>();
+          
+     
 }
 
 void Analysis::deleteAnalysis()
@@ -173,6 +217,33 @@ void Analysis::deleteAnalysis()
           }
           delete marginalDistributions;
      }
+     
+     
+     
+     if( histogramProducers!=nullptr) {
+     for(auto it = this->histogramProducers->begin(); it!=histogramProducers->end(); ++it) {
+       HistogramsProducer * hp = ( it->second );
+       hp->close();
+       delete hp;
+     }
+     cout << "delete histogramProducers"<<endl;
+     delete histogramProducers;
+     
+     }
+     
+     if( edfProducers!=nullptr) {
+         
+      for(auto it = this->edfProducers->begin(); it!=edfProducers->end(); ++it) {
+       EDFProducer * hp = ( it->second );
+       hp->close();
+       delete hp;
+     }
+     cout << "delete edfProducers"<<endl;
+     delete edfProducers;
+     
+     }
+     
+     cout << "all deleted"<<endl;
 }
 
 
@@ -359,7 +430,7 @@ void Analysis::saveMeanRTestResults()
      double previousValue = 0.0;
      
      size_t meanRs = meanR->size();
-     int fitCount = meanRs > 100 ? 100 : meanRs;
+     int fitCount = meanRs > 50 ? 50 : meanRs;
      double x[fitCount], y[fitCount];
      
      int ind = 0;
@@ -374,9 +445,9 @@ void Analysis::saveMeanRTestResults()
 	  //double deriv = (mean - previousValue)/h;
 	  
 	  // skip extreme values
-	  if( mean < 5.0* previousValue) {
+	  //if( mean < 2.0* previousValue) {
           output << it->first << "\t" << mean << "\t" << "\n";
-	  }
+	  //}
 	  
 	  
 	  if( c > meanRs - fitCount) {

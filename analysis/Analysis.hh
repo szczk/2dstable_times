@@ -13,6 +13,12 @@
 
 #include "KolmogorovTest.hh"
 
+
+//delete when not needed
+#include "HistogramsProducer.hh"
+#include "EDFProducer.hh"
+
+
 using namespace std;
 
 
@@ -38,6 +44,13 @@ private:
      //vector<MarginalDistributions*> * marginalDistributions;
 
 
+     
+     
+     map<double, HistogramsProducer *> *histogramProducers ;
+     map<double, EDFProducer *>  *edfProducers ;
+
+
+     
 
      void initAnalysis();
      void deleteAnalysis();
