@@ -415,8 +415,7 @@ void Analysis::saveMeanRTestResults()
      meanRplt << "set xlabel \"t\"\n";
      meanRplt << "set ylabel \"<r^2>\"\n";
 
-     meanRplt << "plot './"<< datafileName <<"' using 1:2 w lp notitle\n";
-     meanRplt.close();
+
 
      //calculate derivative at the same time 
      
@@ -475,6 +474,9 @@ void Analysis::saveMeanRTestResults()
      cout << "x[0] = " << x[0] << "\t x[count-2] = " << x[fitCount-2] << "\t x[count-1] =" << x[fitCount-1] <<endl;
      cout << "y[0] = " << y[0] << "\t y[count-2] = " << y[fitCount-2] << "\t y[count-1] =" << y[fitCount-1] <<endl;
      
-     cout << "set arrow from "<<x[0]<<","<< (c1 * x[0] + c0)<< " to "<< x[fitCount-2]<<","<< (x[fitCount-2]* c1 + c0) <<" nohead lt 1 lw 3"<<endl;
+     meanRplt << "set arrow from "<< (x[0] -1.0) <<","<< (c1 * x[0] + c0)<< " to "<< x[fitCount-2]<<","<< (x[fitCount-2]* c1 + c0) <<" nohead lt 1 lw 3\n"<<endl;
 
+     
+     meanRplt << "plot './"<< datafileName <<"' using 1:2 w lp notitle lc rgb \"#0000ff\"\n";
+     meanRplt.close();
 }
