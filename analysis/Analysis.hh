@@ -44,13 +44,13 @@ private:
      //vector<MarginalDistributions*> * marginalDistributions;
 
 
-     
-     
+
+
      map<double, HistogramsProducer *> *histogramProducers ;
      map<double, EDFProducer *>  *edfProducers ;
 
 
-     
+
 
      void initAnalysis();
      void deleteAnalysis();
@@ -62,8 +62,8 @@ private:
 
 
      void saveMeanRTestResults();
-     
-     
+
+
      void saveKolmogorovTestResults ( double deltaT );
 
 

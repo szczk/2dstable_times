@@ -125,41 +125,41 @@ void Analysis::fill ( double t, double x, double y )
      mr->add ( x,y );
      marginalDistr->add ( x,y );
 
-     
-     
-     if(false) {
-         
-        auto ahp = this->histogramProducers->find ( t );
-        auto aedf = this->edfProducers->find ( t );
 
-        auto hpEnd = this->histogramProducers->end();
-        auto edfEnd = this->edfProducers->end(); 
-         
-        
-        
-        HistogramsProducer * producer ;
-        EDFProducer * edfProducer;
 
-        if( ahp == hpEnd) {
-            cout << " new HP for t= " << t <<endl;
-            producer = new HistogramsProducer ( settings );
-            producer->setTime ( t );
-            this->histogramProducers->insert( std::make_pair(t, producer) ) ;
-        } else {
-            producer = ahp->second;
-        }
-        
-        if( aedf == edfEnd ) {
-            edfProducer = new EDFProducer ( settings );
-            edfProducer->setTime ( t );
-            this->edfProducers->insert( std::make_pair(t,edfProducer));
-        } else {
-            edfProducer = aedf->second;
-        }
+     if ( false ) {
 
-        
-        producer->fill(x,y);
-        edfProducer->fill(x,y);
+          auto ahp = this->histogramProducers->find ( t );
+          auto aedf = this->edfProducers->find ( t );
+
+          auto hpEnd = this->histogramProducers->end();
+          auto edfEnd = this->edfProducers->end();
+
+
+
+          HistogramsProducer * producer ;
+          EDFProducer * edfProducer;
+
+          if ( ahp == hpEnd ) {
+               cout << " new HP for t= " << t <<endl;
+               producer = new HistogramsProducer ( settings );
+               producer->setTime ( t );
+               this->histogramProducers->insert ( std::make_pair ( t, producer ) ) ;
+          } else {
+               producer = ahp->second;
+          }
+
+          if ( aedf == edfEnd ) {
+               edfProducer = new EDFProducer ( settings );
+               edfProducer->setTime ( t );
+               this->edfProducers->insert ( std::make_pair ( t,edfProducer ) );
+          } else {
+               edfProducer = aedf->second;
+          }
+
+
+          producer->fill ( x,y );
+          edfProducer->fill ( x,y );
 
      }
 }
@@ -178,14 +178,14 @@ void Analysis::initAnalysis()
 {
      this->meanR = new map<double, MeanRsquared*>();
      this->marginalDistributions = new map<double, MarginalDistributions*>();
-     
-     
-     
-     
+
+
+
+
      histogramProducers = new map<double, HistogramsProducer *>(); ;
      edfProducers = new map<double, EDFProducer *>();
-          
-     
+
+
 }
 
 void Analysis::deleteAnalysis()
@@ -217,32 +217,32 @@ void Analysis::deleteAnalysis()
           }
           delete marginalDistributions;
      }
-     
-     
-     
-     if( histogramProducers!=nullptr) {
-     for(auto it = this->histogramProducers->begin(); it!=histogramProducers->end(); ++it) {
-       HistogramsProducer * hp = ( it->second );
-       hp->close();
-       delete hp;
+
+
+
+     if ( histogramProducers!=nullptr ) {
+          for ( auto it = this->histogramProducers->begin(); it!=histogramProducers->end(); ++it ) {
+               HistogramsProducer * hp = ( it->second );
+               hp->close();
+               delete hp;
+          }
+          cout << "delete histogramProducers"<<endl;
+          delete histogramProducers;
+
      }
-     cout << "delete histogramProducers"<<endl;
-     delete histogramProducers;
-     
+
+     if ( edfProducers!=nullptr ) {
+
+          for ( auto it = this->edfProducers->begin(); it!=edfProducers->end(); ++it ) {
+               EDFProducer * hp = ( it->second );
+               hp->close();
+               delete hp;
+          }
+          cout << "delete edfProducers"<<endl;
+          delete edfProducers;
+
      }
-     
-     if( edfProducers!=nullptr) {
-         
-      for(auto it = this->edfProducers->begin(); it!=edfProducers->end(); ++it) {
-       EDFProducer * hp = ( it->second );
-       hp->close();
-       delete hp;
-     }
-     cout << "delete edfProducers"<<endl;
-     delete edfProducers;
-     
-     }
-     
+
      cout << "all deleted"<<endl;
 }
 
@@ -417,66 +417,66 @@ void Analysis::saveMeanRTestResults()
 
 
 
-     //calculate derivative at the same time 
-     
-     // f'(x) = (f(x-h) + f(x+h))/(2h) 
+     //calculate derivative at the same time
+
+     // f'(x) = (f(x-h) + f(x+h))/(2h)
      // backward derivative
-     // f'(x) = (f(x) - f(x-h))/(h) 
-     
+     // f'(x) = (f(x) - f(x-h))/(h)
+
      //double previousValue = 0.0;
      //double h = this->settings->getDt();
-     
+
      double previousValue = 0.0;
-     
+
      size_t meanRs = meanR->size();
      int fitCount = meanRs > 50 ? 50 : meanRs;
      double x[fitCount], y[fitCount];
-     
+
      int ind = 0;
      int c = 0;
      for ( auto it = meanR->begin(); it!= meanR->end(); ++it ) {
-         
+
           double t = it->first;
           MeanRsquared * mr = ( it->second );
 //                cout << "t = " << it->first  << "\t < r^2 >  = " << mr->getMeanValue() <<endl;
-	  double mean = mr->getMeanValue();
-	  
-	  //double deriv = (mean - previousValue)/h;
-	  
-	  // skip extreme values
-	  //if( mean < 2.0* previousValue) {
+          double mean = mr->getMeanValue();
+
+          //double deriv = (mean - previousValue)/h;
+
+          // skip extreme values
+          //if( mean < 2.0* previousValue) {
           output << it->first << "\t" << mean << "\t" << "\n";
-	  //}
-	  
-	  
-	  if( c > meanRs - fitCount) {
-          y[ind] = mean;
-          x[ind] = t;
-          
-          ind++;
-      }
-	  
-	  
-	  
-	  previousValue = mean;
-      ++c;
+          //}
+
+
+          if ( c > meanRs - fitCount ) {
+               y[ind] = mean;
+               x[ind] = t;
+
+               ind++;
+          }
+
+
+
+          previousValue = mean;
+          ++c;
      }
-    // output.flush();
+     // output.flush();
      output.close();
 
-     
-     double c0, c1;
-     int code = Utility::linearRegression(  x, y, fitCount-1, &c0, &c1 );
 
-     
+     double c0, c1;
+     int code = Utility::linearRegression ( x, y, fitCount-1, &c0, &c1 );
+
+
      cout << " fit code: " << code << endl;
      cout << " c0: " << c0 << "\tc1:" << c1<<endl;
      cout << "x[0] = " << x[0] << "\t x[count-2] = " << x[fitCount-2] << "\t x[count-1] =" << x[fitCount-1] <<endl;
      cout << "y[0] = " << y[0] << "\t y[count-2] = " << y[fitCount-2] << "\t y[count-1] =" << y[fitCount-1] <<endl;
-     
-     meanRplt << "set arrow from "<< (x[0] -1.0) <<","<< (c1 * x[0] + c0)<< " to "<< x[fitCount-2]<<","<< (x[fitCount-2]* c1 + c0) <<" nohead lt 1 lw 3\n"<<endl;
 
-     
+     meanRplt << "set arrow from "<< ( x[0] -1.0 ) <<","<< ( c1 * x[0] + c0 ) << " to "<< x[fitCount-2]<<","<< ( x[fitCount-2]* c1 + c0 ) <<" nohead lt 1 lw 3\n"<<endl;
+
+
      meanRplt << "plot './"<< datafileName <<"' using 1:2 w lp notitle lc rgb \"#0000ff\"\n";
      meanRplt.close();
 }

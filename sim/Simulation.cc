@@ -36,7 +36,7 @@ void Simulation::cleanUp()
 
 void Simulation::reset()
 {
-     this->rand->reset();
+//      this->rand->reset();
      if ( potential!=nullptr ) delete potential;
 
      int potentialType = this->settings->get ( "POTENTIAL_TYPE" );
