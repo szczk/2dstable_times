@@ -6,7 +6,7 @@ HistogramsProducer::HistogramsProducer ( Settings * s ) : alreadySaved ( false )
 {
      this->settings = s;
      this->init();
-     
+
 
      this->time = this->settings->get ( "maxT" );
 
@@ -31,9 +31,9 @@ void HistogramsProducer::init()
 
 void HistogramsProducer::close()
 {
-  cout << "HistogramsProducer:: saving histograms " <<endl;
+     cout << "HistogramsProducer:: saving histograms " <<endl;
      if ( ! this->alreadySaved ) this->save();
-  cout << "HistogramsProducer:: all saved"<<endl;
+     cout << "HistogramsProducer:: all saved"<<endl;
 }
 
 void HistogramsProducer::initHistograms()
@@ -85,7 +85,7 @@ void HistogramsProducer::fill ( double x, double y )
 void HistogramsProducer::save()
 {
      if ( alreadySaved ) return;
-     
+
 
 
      double alpha = this->settings->getJumpsParameter();
@@ -98,7 +98,7 @@ void HistogramsProducer::save()
 
 
 
-     
+
      sprintf ( fullSuffix, "%s_t_%2.3f", this->settings->getFullOutputFilesPrefix().c_str() , this->time );
 
      sprintf ( buf, "%s/%s_plot.plt", settings->getStoragePath(), fullSuffix );
@@ -215,7 +215,7 @@ void HistogramsProducer::save()
 
 
 
-     
+
 
      alreadySaved = true;
 }

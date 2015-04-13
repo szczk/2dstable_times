@@ -159,3 +159,4 @@ int KolmogorovTest::Nint( double x)
    return i;
 
 }
+

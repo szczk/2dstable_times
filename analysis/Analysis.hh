@@ -5,9 +5,8 @@
 #include <vector>
 
 #include "../core/Settings.hh"
-#include "../tools/TrajectoriesDatafilesIterator.hh"
 #include "../tools/Utility.hh"
-
+#include "../tools/Datafile.hh"
 #include "MeanRsquared.hh"
 #include "MarginalDistributions.hh"
 

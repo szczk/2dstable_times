@@ -417,23 +417,14 @@ void Analysis::saveMeanRTestResults()
 
 
 
-     //calculate derivative at the same time
-
-     // f'(x) = (f(x-h) + f(x+h))/(2h)
-     // backward derivative
-     // f'(x) = (f(x) - f(x-h))/(h)
-
      //double previousValue = 0.0;
-     //double h = this->settings->getDt();
-
-     double previousValue = 0.0;
 
      size_t meanRs = meanR->size();
      int fitCount = meanRs > 50 ? 50 : meanRs;
      double x[fitCount], y[fitCount];
 
      int ind = 0;
-     int c = 0;
+     unsigned int c = 0;
      for ( auto it = meanR->begin(); it!= meanR->end(); ++it ) {
 
           double t = it->first;
@@ -458,7 +449,7 @@ void Analysis::saveMeanRTestResults()
 
 
 
-          previousValue = mean;
+          //previousValue = mean;
           ++c;
      }
      // output.flush();

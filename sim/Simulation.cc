@@ -93,15 +93,10 @@ void Simulation::run ( Datafile* datafile )
           }
 
           if ( this->potential->inLimit ( X ) ) {
-
-
-
-
                // grad V(x,y)
                vec potential = ( * ( this->potential ) ) ( X );
 
                // calkowanie numeryczne
-
                X.x += -potential.x*dt  + v[0]*dL;
                X.y += -potential.y*dt  + v[1]*dL;
 
