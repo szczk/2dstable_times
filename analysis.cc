@@ -25,13 +25,6 @@ int main ( int argc, char **argv )
 
      ///==================================================================================
 
-     //open datafiles with trajectories
-
-
-     //TrajectoriesDatafilesIterator * trajIterator = new TrajectoriesDatafilesIterator ( &settings );
-
-
-
      // analysis
      Analysis * analysis = new Analysis ( &settings );
      // when deleting analysis, iterator will not be deleted!
@@ -47,12 +40,9 @@ int main ( int argc, char **argv )
      int tenPerc = ( ntrajectories>10 ) ? ( int ) ( ntrajectories*0.1 ) : 1;
      cout << "opening trajectories files"<<endl;
 
-
-
-
      if ( settings.multipleOutputs() ) {
           int maxNum = settings.getMultipleOutputFilenum();
-          bool first = true;
+//           bool first = true;
           for ( int filenum = 1; filenum <= maxNum ; filenum++ ) {
                for ( int nt =0; nt < ntrajectories ; nt++ ) {
                     if ( nt%tenPerc==0 ) {
@@ -60,25 +50,14 @@ int main ( int argc, char **argv )
                     }
 
                     string outputFile = settings.getMultiDatafileName ( settings.getDataPath(), filenum,  nt );
-                    cout << "opening " << outputFile << endl;
+                    cout << "opening " << outputFile << "...";
 
                     Datafile * datafile = Datafile::open ( outputFile.c_str() );
                     if ( datafile->ok() ) {
-
-
+                         cout << "ok"<<endl;
                          analysis->fillFromFile ( datafile );
-
-//                          int count = datafile->getCount();
-//
-//                          if ( first ) {
-//                               this->count = count;
-//                          }
-//
-//                          if ( count != this->count ) {
-//                               cout << " non equal trajectory count! " << cout << " vs " << this->count << "!!!" << endl;
-//                               throw -1;
-//                          }
-//                          this->count = count;
+                    } else {
+                         cout << "not ok"<<endl;
                     }
                     delete datafile;
                }
@@ -91,13 +70,16 @@ int main ( int argc, char **argv )
                }
 
                string outputFile = settings.getDatafileName ( settings.getDataPath(), nt );
-               cout << "opening " << outputFile << endl;
+               cout << "opening " << outputFile << "...";
                Datafile * datafile = Datafile::open ( outputFile.c_str() );
                if ( datafile->ok() ) {
+                    cout << "ok"<<endl;
                     analysis->fillFromFile ( datafile );
                } else {
-                    delete datafile;
+                    cout << "not ok"<<endl;
                }
+               datafile->close();
+               delete datafile;
           }
      }
 
