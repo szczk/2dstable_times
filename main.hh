@@ -12,8 +12,6 @@
 #include "tools/Datafile.hh"
 #include "sim/Simulation.hh"
 
-#include "tools/TrajectoriesDatafilesIterator.hh"
-
 
 #include "analysis/Analysis.hh"
 

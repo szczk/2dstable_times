@@ -5,9 +5,8 @@
 #include <vector>
 
 #include "../core/Settings.hh"
-#include "../tools/TrajectoriesDatafilesIterator.hh"
 #include "../tools/Utility.hh"
-
+#include "../tools/Datafile.hh"
 #include "MeanRsquared.hh"
 #include "MarginalDistributions.hh"
 
@@ -44,13 +43,13 @@ private:
      //vector<MarginalDistributions*> * marginalDistributions;
 
 
-     
-     
+
+
      map<double, HistogramsProducer *> *histogramProducers ;
      map<double, EDFProducer *>  *edfProducers ;
 
 
-     
+
 
      void initAnalysis();
      void deleteAnalysis();
@@ -62,8 +61,8 @@ private:
 
 
      void saveMeanRTestResults();
-     
-     
+
+
      void saveKolmogorovTestResults ( double deltaT );
 
 

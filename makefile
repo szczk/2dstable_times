@@ -1,4 +1,4 @@
-DIRS := core tools trajectories analysis sim
+DIRS := core tools analysis sim
 PROGNAME = main
 OBJDIR = obj
 .PHONY: all clean run test
@@ -45,7 +45,7 @@ run:
 	./$(PROGNAME).x
 
 clean:
-	rm $(LIBOBJ) *.x
+	rm $(LIBOBJ) *.x *.o
 	
 delete:
 	rm *.txt *.png *.gnu

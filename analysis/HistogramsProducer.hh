@@ -23,7 +23,7 @@ class HistogramsProducer {
 private:
      Settings * settings;
      bool alreadySaved;
-     
+
      double range;
      double xmin,xmax;
      double ymin,ymax;
@@ -33,11 +33,11 @@ private:
 
      double dx;
      double dy;
-     
-     
-     // 
-     double time; 
-     
+
+
+     //
+     double time;
+
      //histogram 2d
      gsl_histogram2d * histogram;
 
@@ -47,7 +47,7 @@ private:
 
 
      void initHistograms();
-     
+
      void init();
      void save();
 
@@ -59,12 +59,12 @@ public:
 
      void close();
 
-     
-     void fill(double x, double y);
+
+     void fill ( double x, double y );
 
 
-     void setTime(double t) {
-      if(t>=0.0) this->time = t; 
+     void setTime ( double t ) {
+          if ( t>=0.0 ) this->time = t;
      }
 };
 
