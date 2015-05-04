@@ -49,7 +49,14 @@ void Analysis::save()
           this->saveKolmogorovTestResults ( 0.15 );
           this->saveKolmogorovTestResults ( 0.2 );
           this->saveKolmogorovTestResults ( 0.3 );
-     }
+          this->saveKolmogorovTestResults ( 0.4 );
+          this->saveKolmogorovTestResults ( 0.5 );
+          this->saveKolmogorovTestResults ( 0.7 );
+          this->saveKolmogorovTestResults ( 0.8 );
+          this->saveKolmogorovTestResults ( 0.9 );
+          this->saveKolmogorovTestResults ( 1.0 );
+       
+    }
 
 
 

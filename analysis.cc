@@ -79,7 +79,9 @@ int main ( int argc, char **argv )
 //                               throw -1;
 //                          }
 //                          this->count = count;
+                         
                     }
+                    
                     delete datafile;
                }
           }
@@ -95,9 +97,10 @@ int main ( int argc, char **argv )
                Datafile * datafile = Datafile::open ( outputFile.c_str() );
                if ( datafile->ok() ) {
                     analysis->fillFromFile ( datafile );
-               } else {
-                    delete datafile;
-               }
+               } 
+               
+               delete datafile;
+               
           }
      }
 
