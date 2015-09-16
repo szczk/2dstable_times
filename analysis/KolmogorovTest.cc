@@ -70,14 +70,14 @@ double KolmogorovTest::calculate ( EDF* edf1 , EDF* edf2)
    if (ok) {
       rdmax = max(rdmax,abs(rdiff));
       double z = rdmax * sqrt(rna*rnb/(rna+rnb));
-      prob = KolmogorovProb(z);
+      //prob = KolmogorovProb(z);
    }
       // debug printout
    //if (opt.Contains("D")) {
 //      cout << " Kolmogorov Probability = "<< prob " <<, Max Dist = " << rdmax << "\n";
    //}
    //if(opt.Contains("M")) return rdmax;
-   return prob;
+   return rdmax;
    
 }
 

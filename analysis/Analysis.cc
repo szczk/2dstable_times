@@ -28,7 +28,7 @@ void Analysis::save()
 
      // do save
      if ( this->meanR!=nullptr ) {
-          cout << "saving meanR"<<endl;
+          cout << "Analysis::saving meanR"<<endl;
 
           this->saveMeanRTestResults();
      }
@@ -36,7 +36,7 @@ void Analysis::save()
 
      if ( this->marginalDistributions!=nullptr ) {
 
-          cout << "saving marginalDistributions"<<endl;
+          cout << "Analysis::saving marginalDistributions"<<endl;
 
 //           double deltaT = this->settings->get ( "KSTEST_DELTA_T" ); //time interval between two distibutions
 
@@ -55,8 +55,13 @@ void Analysis::save()
           this->saveKolmogorovTestResults ( 0.8 );
           this->saveKolmogorovTestResults ( 0.9 );
           this->saveKolmogorovTestResults ( 1.0 );
-       
-    }
+          this->saveKolmogorovTestResults ( 1.2 );
+          this->saveKolmogorovTestResults ( 1.4 );
+          this->saveKolmogorovTestResults ( 1.6 );
+          this->saveKolmogorovTestResults ( 1.8 );
+          this->saveKolmogorovTestResults ( 2.0 );
+
+     }
 
 
 
@@ -77,7 +82,7 @@ void Analysis::calculate()
 void Analysis::fillFromFile ( Datafile* f )
 {
      if ( f==nullptr ) {
-          cout << "passed datafile is null!"<<endl;
+          cout << "Analysis::passed datafile is null!"<<endl;
           throw -1;
      }
      if ( f->ok() ) {
@@ -96,7 +101,7 @@ void Analysis::fillFromFile ( Datafile* f )
 
 
      } else {
-          cout << "passed datafile not ok!"<<endl;
+          cout << "Analysis::passed datafile not ok!"<<endl;
      }
 }
 
@@ -134,41 +139,41 @@ void Analysis::fill ( double t, double x, double y )
 
 
 
-     if ( false ) {
-
-          auto ahp = this->histogramProducers->find ( t );
-          auto aedf = this->edfProducers->find ( t );
-
-          auto hpEnd = this->histogramProducers->end();
-          auto edfEnd = this->edfProducers->end();
-
-
-
-          HistogramsProducer * producer ;
-          EDFProducer * edfProducer;
-
-          if ( ahp == hpEnd ) {
-               cout << " new HP for t= " << t <<endl;
-               producer = new HistogramsProducer ( settings );
-               producer->setTime ( t );
-               this->histogramProducers->insert ( std::make_pair ( t, producer ) ) ;
-          } else {
-               producer = ahp->second;
-          }
-
-          if ( aedf == edfEnd ) {
-               edfProducer = new EDFProducer ( settings );
-               edfProducer->setTime ( t );
-               this->edfProducers->insert ( std::make_pair ( t,edfProducer ) );
-          } else {
-               edfProducer = aedf->second;
-          }
-
-
-          producer->fill ( x,y );
-          edfProducer->fill ( x,y );
-
-     }
+//      if ( false ) {
+//
+//           auto ahp = this->histogramProducers->find ( t );
+//           auto aedf = this->edfProducers->find ( t );
+//
+//           auto hpEnd = this->histogramProducers->end();
+//           auto edfEnd = this->edfProducers->end();
+//
+//
+//
+//           HistogramsProducer * producer ;
+//           EDFProducer * edfProducer;
+//
+//           if ( ahp == hpEnd ) {
+//                cout << "Analysis:: new HP for t= " << t <<endl;
+//                producer = new HistogramsProducer ( settings );
+//                producer->setTime ( t );
+//                this->histogramProducers->insert ( std::make_pair ( t, producer ) ) ;
+//           } else {
+//                producer = ahp->second;
+//           }
+//
+//           if ( aedf == edfEnd ) {
+//                edfProducer = new EDFProducer ( settings );
+//                edfProducer->setTime ( t );
+//                this->edfProducers->insert ( std::make_pair ( t,edfProducer ) );
+//           } else {
+//                edfProducer = aedf->second;
+//           }
+//
+//
+//           producer->fill ( x,y );
+//           edfProducer->fill ( x,y );
+//
+//      }
 }
 
 
@@ -198,7 +203,7 @@ void Analysis::initAnalysis()
 void Analysis::deleteAnalysis()
 {
      if ( this->meanR!=nullptr ) {
-          cout << "deleting meanR"<<endl;
+          cout << "Analysis::deleting meanR"<<endl;
 
           for ( auto it = meanR->begin(); it!= meanR->end(); ++it ) {
                MeanRsquared * mr = ( it->second );
@@ -212,7 +217,7 @@ void Analysis::deleteAnalysis()
      }
 
      if ( this->marginalDistributions!=nullptr ) {
-          cout << "deleting marginalDistributions"<<endl;
+          cout << "Analysis::deleting marginalDistributions"<<endl;
           for ( auto it = marginalDistributions->begin(); it!= marginalDistributions->end(); ++it ) {
                MarginalDistributions * distributions = ( it->second );
 
@@ -233,7 +238,7 @@ void Analysis::deleteAnalysis()
                hp->close();
                delete hp;
           }
-          cout << "delete histogramProducers"<<endl;
+          cout << "Analysis::delete histogramProducers"<<endl;
           delete histogramProducers;
 
      }
@@ -245,12 +250,12 @@ void Analysis::deleteAnalysis()
                hp->close();
                delete hp;
           }
-          cout << "delete edfProducers"<<endl;
+          cout << "Analysis::delete edfProducers"<<endl;
           delete edfProducers;
 
      }
 
-     cout << "all deleted"<<endl;
+     cout << "Analysis::all deleted"<<endl;
 }
 
 
@@ -362,13 +367,13 @@ void Analysis::saveKolmogorovTestResults ( double deltaT )
 
           double t = distributions->getT();
 
-//           double secondT = t + deltaT;
+          double secondT = c + deltaN;
           double keySecondT = keys->at ( c + deltaN );
           //bool secondTexists = ( this->marginalDistributions->count( secondT) == 1 );
           MarginalDistributions * secondDist = this->marginalDistributions->at ( keySecondT );
 
 //        double secondT = secondDist->getT();
-//        cout << "t = " << t << "\t second t  = " << secondT ;
+         // cout << "Analysis:: Kolmogorov test  t = " << keyT << "\t second t  = " << secondT << endl;
 
           //test << meanR->getT() << "\t" << meanR->getMeanValue() << endl;
 

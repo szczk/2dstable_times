@@ -56,7 +56,8 @@ int main ( int argc, char **argv )
                     if ( datafile->ok() ) {
                          cout << "ok"<<endl;
                          analysis->fillFromFile ( datafile );
-                    delete datafile;
+                         delete datafile;
+                    }
                }
           }
      } else {
@@ -72,8 +73,8 @@ int main ( int argc, char **argv )
                if ( datafile->ok() ) {
                     cout << "ok"<<endl;
                     analysis->fillFromFile ( datafile );
-               } 
-               
+               }
+
                delete datafile;
 
           }

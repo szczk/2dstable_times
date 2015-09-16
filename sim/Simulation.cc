@@ -107,7 +107,7 @@ void Simulation::run ( Datafile* datafile )
                //  x^2+y^2>  pow(10.,3./(c-2.+0.01)))
                //
 
-               cout << "  out of limit! " <<endl;
+               cout << "Simulation:: out of limit! " <<endl;
                //cout << " X = " << X.x <<"\t Y = " << X.y <<endl;
 
                //calculate exact value by solving diff equat.
