@@ -61,7 +61,7 @@ public:
      virtual bool inLimit ( const vec X ) {
           // x^2+y^2>  pow(10.,3./(c-2.+0.01)))
           //  10^(3/( 2.01 )) =~ 31.62
-          return ( ( X.x*X.x + X.y*X.y ) < 31.62 );
+          return ( ( X.x*X.x + X.y*X.y ) < 11.62 );
      }
 
      virtual vec getExact ( const vec X, double dt ) {

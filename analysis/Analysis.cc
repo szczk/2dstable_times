@@ -337,13 +337,6 @@ void Analysis::saveKolmogorovTestResults ( double deltaT )
 
      ksYplt << "plot './"<< datafileNameY <<"' using 1:2 w lp notitle\n";
 
-
-
-
-
-
-
-
      ksXout <<"# t \t K-S test D (marginal X distr, delta T = " << deltaT<<")\n";
      ksYout <<"# t \t K-S test D (marginal Y distr, delta T = " << deltaT<<")\n";
 
@@ -373,7 +366,7 @@ void Analysis::saveKolmogorovTestResults ( double deltaT )
           MarginalDistributions * secondDist = this->marginalDistributions->at ( keySecondT );
 
 //        double secondT = secondDist->getT();
-         // cout << "Analysis:: Kolmogorov test  t = " << keyT << "\t second t  = " << secondT << endl;
+          // cout << "Analysis:: Kolmogorov test  t = " << keyT << "\t second t  = " << secondT << endl;
 
           //test << meanR->getT() << "\t" << meanR->getMeanValue() << endl;
 

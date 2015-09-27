@@ -6,8 +6,6 @@
 
 #include <sys/resource.h>
 
-#include "analysis/MeanRsquared.hh"
-#include "analysis/MarginalDistributions.hh"
 
 int main ( int argc, char **argv )
 {

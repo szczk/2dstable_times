@@ -100,7 +100,6 @@ void Simulation::run ( Datafile* datafile )
                X.x += -potential.x*dt  + v[0]*dL;
                X.y += -potential.y*dt  + v[1]*dL;
 
-
           } else {
                // dla odpowiednio duzych r
                // przechodzimy na obliczenie dokladne czesci deterministrycznej + dodanie czesci stochastycznej
@@ -108,7 +107,7 @@ void Simulation::run ( Datafile* datafile )
                //
 
                cout << "Simulation:: out of limit! " <<endl;
-               //cout << " X = " << X.x <<"\t Y = " << X.y <<endl;
+//                cout << " X = " << X.x <<"\t Y = " << X.y <<endl;
 
                //calculate exact value by solving diff equat.
                // for X[t] Y[t]
@@ -117,15 +116,18 @@ void Simulation::run ( Datafile* datafile )
 
                vec newX = this->potential->getExact ( X, dt );
 
-               //cout << " new X = " << newX.x <<"\t new Y = " << newX.y <<endl;
-               //cout << " noise: " << v[0] << "\t" << v[1]<<endl;
-               //cout << " dL = " << dL <<endl;
+//                cout << " new X = " << newX.x <<"\t new Y = " << newX.y <<endl;
+//                cout << " noise: " << v[0] << "\t" << v[1]<<endl;
+//                cout << " dL = " << dL <<endl;
 
                X.x = newX.x + v[0]*dL;
                X.y = newX.y + v[1]*dL;
 
-               //cout << "with noise: X = " << X.x <<"\t Y = " << X.y <<endl;
+               cout << "with noise: X = " << X.x <<"\t Y = " << X.y <<endl;
           }
+          
+//           if(X.x > 5.0 ) X.x = 5.0;
+// 	  if(X.y > 5.0 ) X.y = 5.0;
 
 
           delete[] v;
