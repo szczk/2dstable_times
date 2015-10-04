@@ -63,9 +63,9 @@ void EDFProducer::save()
 
   
   
-  double alpha = this->settings->getJumpsParameter();
-  int potentialType = this->settings->get ( "POTENTIAL_TYPE" );
-  int noiseType = this->settings->get ( "NOISE_TYPE" );
+  //double alpha = this->settings->getJumpsParameter();
+//   int potentialType = this->settings->get ( "POTENTIAL_TYPE" );
+//   int noiseType = this->settings->get ( "NOISE_TYPE" );
   
   char buf[200];
   char dataFileName[200];

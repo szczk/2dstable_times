@@ -3,36 +3,27 @@
 #include <gsl/gsl_histogram.h>
 #include <fstream>
 #include <vector>
-
 #include <sys/resource.h>
-
+#include "stdio.h"
 
 int main ( int argc, char **argv )
 {
-     cout << endl << endl;
-
+     cout << "\n\n" << flush;
      System& sys = System::getInstance();
      sys.start();
-
      sys.printInfo();
 
      Settings& settings = Settings:: getInstance ( "settings.dat" );
      settings.readCommandLineParameters ( argc,argv );
      settings.printParameters();
-
-
      ///==================================================================================
-
      // analysis
      Analysis * analysis = new Analysis ( &settings );
      // when deleting analysis, iterator will not be deleted!
 
-
-     //  < r^2>    x, y ,t
-     //  KS      (x),(y),t
+     // < r^2>    x, y ,t
+     // KS      (x),(y),t
      // KS 2d  (x,y),t
-
-
 
      double ntrajectories = settings.getNtrajectories();
      int tenPerc = ( ntrajectories>10 ) ? ( int ) ( ntrajectories*0.1 ) : 1;
@@ -64,7 +55,6 @@ int main ( int argc, char **argv )
                if ( nt%tenPerc==0 ) {
                     cout << nt<<"/"<<ntrajectories<<endl;
                }
-
                string outputFile = settings.getDatafileName ( settings.getDataPath(), nt );
                cout << "opening " << outputFile << "...";
                Datafile * datafile = Datafile::open ( outputFile.c_str() );
@@ -72,35 +62,12 @@ int main ( int argc, char **argv )
                     cout << "ok"<<endl;
                     analysis->fillFromFile ( datafile );
                }
-
                delete datafile;
-
           }
      }
 
-
-
-
-     analysis->calculate();
-
-     analysis->save();
-
-     analysis->close();
-
-
-
-
-
-
-
-
-
-
+     analysis->calculate()->save()->close();
      delete analysis;
-
-//      delete trajIterator;
-
-
 
      ///===================================================================================================
 

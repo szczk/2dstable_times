@@ -1,7 +1,7 @@
-ntrajectories = 50000
+ntrajectories = 15000
 
 #jumps parameter (superdiffusion)
-alpha = 2.0
+alpha = 0.9
 
 # waiting times parameter ( subdiffusion )
 beta = 1.0
@@ -11,7 +11,7 @@ beta = 1.0
 starttime=0.0
 
 # end time
-maxT = 3.0
+maxT = 10.0
 
 
 # time step

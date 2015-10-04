@@ -281,4 +281,5 @@ string Settings::getFullOutputFilesPrefix()
 
      sprintf ( fullPrefix,"%s_a%1.2f_b%1.2f_s%1.2f_nt%i_pt%i", getFilesPrefix(),alpha ,beta , noise , noiseType, potentialType );
      return string ( fullPrefix );
+     
 }

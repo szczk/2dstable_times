@@ -113,6 +113,9 @@ double DatafilesChain::read() {
   if(file->hasNext()) {
     return file->read(); 
   }
+  else {
+   throw -1;
+  }
 }
 
 bool DatafilesChain::hasNext() {

@@ -9,10 +9,7 @@
 #include "../tools/Datafile.hh"
 #include "MeanRsquared.hh"
 #include "MarginalDistributions.hh"
-
 #include "KolmogorovTest.hh"
-
-
 //delete when not needed
 #include "HistogramsProducer.hh"
 #include "EDFProducer.hh"
@@ -35,54 +32,25 @@ class Analysis {
 private:
      Settings * settings;
 
-//      TrajectoriesDatafilesIterator * trajIterator;
-
      // analysis modules mapped by time
      map<double, MeanRsquared *> *meanR;
      map<double, MarginalDistributions *> *marginalDistributions;
      //vector<MarginalDistributions*> * marginalDistributions;
 
-
-
-
      map<double, HistogramsProducer *> *histogramProducers ;
      map<double, EDFProducer *>  *edfProducers ;
 
-
-
+     bool calculated;
 
      void initAnalysis();
      void deleteAnalysis();
-
-
-     bool calculated;
-
-//      void checkDatafiles();
-
-
      void saveMeanRTestResults();
-
 
      void saveKolmogorovTestResults ( double deltaT );
 
-
 public:
      Analysis ( Settings * );
-
      ~Analysis();
-
-
-
-//      /**
-//       * when deleting Analysis object, this datafile iterator will NOT be deleted!
-//       */
-//      void setDatafilesIterator ( TrajectoriesDatafilesIterator * iter ) {
-//           if ( iter!=nullptr ) {
-//                this->trajIterator = iter;
-//                this->checkDatafiles();
-//           }
-//      }
-
 
      /*
       * Pass an open datafile to be iterated over t and filled from
@@ -97,10 +65,7 @@ public:
      /**
       * Calculate everything that needs to be calculated
       */
-     void calculate();
-
-
-
+     Analysis * calculate();
 
      /**
       * Save everything that needs to be saved.
@@ -108,12 +73,12 @@ public:
       * as it is not called automatically
       *
       */
-     void save();
+     Analysis * save();
 
      /**
       * close everything and delete objects
       */
-     void close();
+     Analysis * close();
 };
 
 #endif

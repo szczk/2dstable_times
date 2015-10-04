@@ -31,8 +31,6 @@ public:
      double getMeanValue() {
           return this->runningAverage->Mean();
      }
-
-     
      //double getT() { return this->t;}
 };
 

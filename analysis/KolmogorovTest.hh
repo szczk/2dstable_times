@@ -15,13 +15,8 @@ using namespace std;
 
 
 class KolmogorovTest {
-
-
-
      // http://root.cern.ch/root/html/TMath.html#TMath:KolmogorovProb
      static double KolmogorovProb ( double z );
-
-
      static int Nint ( double x );
 
 public:

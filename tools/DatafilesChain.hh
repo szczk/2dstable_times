@@ -43,7 +43,7 @@ private:
      void discoverFiles();
      void init();
      
-     int currentFile;
+     unsigned int currentFile;
 
 public:
 

@@ -36,7 +36,7 @@ void Simulation::cleanUp()
 
 void Simulation::reset()
 {
-//      this->rand->reset();
+     this->rand->reset();
      if ( potential!=nullptr ) delete potential;
 
      int potentialType = this->settings->get ( "POTENTIAL_TYPE" );
@@ -52,6 +52,11 @@ void Simulation::reset()
 }
 
 
+bool isNan ( volatile double &x )
+{
+     return ( ! ( x==x ) ); // detect NaN
+}
+
 void Simulation::run ( Datafile* datafile )
 {
      vec X;
@@ -64,14 +69,10 @@ void Simulation::run ( Datafile* datafile )
      double alpha = this->settings->getJumpsParameter();
      double sigma = this->settings->getNoiseIntensity();
 
-
      double t = this->settings->getStartTime();
      double endTime = this->settings->get ( "maxT" );
      double dt = this->settings->getDt();
-
-
      double dL = exp ( log ( dt ) /alpha ); //pow(dt, 1.0/alpha);
-
 
      int noiseType = settings->get ( "NOISE_TYPE" );
 
@@ -97,16 +98,25 @@ void Simulation::run ( Datafile* datafile )
                vec potential = ( * ( this->potential ) ) ( X );
 
                // calkowanie numeryczne
+// 	       cout << " X = " << X.x <<"\t Y = " << X.y <<endl;
                X.x += -potential.x*dt  + v[0]*dL;
                X.y += -potential.y*dt  + v[1]*dL;
-
+	       
+// 	       cout << " potential x: " << potential.x << "\t potential y:" << potential.y <<"\t";
+// 	       cout << " noise: " << v[0] << "\t" << v[1]<<"\t";
+// 	       cout << " new X = " << X.x <<"\t new Y = " << X.y <<"\n";
+ 	       
+	       if ( ::isnan(X.x) || ::isnan(X.y) ) {
+		exit(0); 
+	       }
+	       
           } else {
                // dla odpowiednio duzych r
                // przechodzimy na obliczenie dokladne czesci deterministrycznej + dodanie czesci stochastycznej
                //  x^2+y^2>  pow(10.,3./(c-2.+0.01)))
                //
 
-               cout << "Simulation:: out of limit! " <<endl;
+//                cout << "Simulation:: out of limit! " <<endl;
 //                cout << " X = " << X.x <<"\t Y = " << X.y <<endl;
 
                //calculate exact value by solving diff equat.
@@ -123,9 +133,9 @@ void Simulation::run ( Datafile* datafile )
                X.x = newX.x + v[0]*dL;
                X.y = newX.y + v[1]*dL;
 
-               cout << "with noise: X = " << X.x <<"\t Y = " << X.y <<endl;
+//                cout << "with noise: X = " << X.x <<"\t Y = " << X.y <<endl;
           }
-          
+
 //           if(X.x > 5.0 ) X.x = 5.0;
 // 	  if(X.y > 5.0 ) X.y = 5.0;
 

@@ -51,18 +51,14 @@ then
    echo "num = $numFiles"
 fi
 
-for alpha in 1.6
+for alpha in 1.2 1.4 1.6 1.8 2.0
 do
-   for beta in 1.0 
-   do
+
        for sigma in 1.0  #$(seq -w 0.2 0.2 5.0)
        do
-          for dfn in $(seq -w 0 $numFiles)
-           do
-		./generator.x --alpha $alpha --beta $beta --noise $sigma --storage "./data"  --tmp "/tmp" --data_file_num $dfn
-	   done
+	 ./generator.x --alpha $alpha --beta $beta --noise $sigma --storage "./data"  --tmp "/tmp"
        done
-   done
+  
 done
 
 

@@ -94,7 +94,7 @@ private:
      int multipleOutputFileNumber;
 
      string datafileNameTemplate;
-
+     
 public:
 
      void setMultipleOutputFilenum ( int num ) {
@@ -275,10 +275,11 @@ public:
       */
      string getFullOutputFilesPrefix();
 
-
-
      string getDatafileName ( const char * , int nt );
      string getMultiDatafileName ( const char* folder, int multiOutputFilenum, int nt );
+     
+     
+     
 };
 
 

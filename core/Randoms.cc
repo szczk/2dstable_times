@@ -19,7 +19,7 @@ Randoms:: ~Randoms()
 void Randoms:: init()
 {
      this->generator = gsl_rng_alloc ( gsl_rng_mt19937 ); //gsl_rng_ranlux
-     //this->reset();
+     this->reset();
 // gsl_rng_set (generator, time(0) );
 
 }
@@ -177,6 +177,10 @@ double* Randoms::getAlphaStableVector ( double alpha , double sigma )
      v[0] = A * this->getGauss ( sigma );
      v[1] = A * this->getGauss ( sigma );
 
+     if(  abs(v[0]) > 1.0e+3 ||  abs(v[1]) > 1.0e+3  ) {
+//        cout << "re-drawing "<< v[0] << "," << v[1] << endl;
+       v = this->getAlphaStableVector(alpha,sigma);
+     }
 
      return v;
 }

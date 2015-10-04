@@ -1,11 +1,10 @@
 #include "Analysis.hh"
+#include <set>
 
 
 
 Analysis::Analysis ( Settings*s ) : settings ( s ), meanR ( nullptr ), marginalDistributions ( nullptr ) ,  calculated ( nullptr )
 {
-
-
      this->initAnalysis();
 }
 
@@ -15,67 +14,57 @@ Analysis:: ~Analysis()
 
 
 
-void Analysis::save()
+Analysis* Analysis::save()
 {
-     if ( !calculated ) {
-          cout << "Analysis::calculate() not called!"<<endl;
-          return;
-     }
-
      cout << "Analysis::save()"<<endl;
 
-
-
+     if ( !calculated ) {
+          cout << "Analysis::calculate() not called!"<<endl;
+          return this;
+     }
      // do save
      if ( this->meanR!=nullptr ) {
           cout << "Analysis::saving meanR"<<endl;
-
           this->saveMeanRTestResults();
      }
-
-
      if ( this->marginalDistributions!=nullptr ) {
 
           cout << "Analysis::saving marginalDistributions"<<endl;
-
 //           double deltaT = this->settings->get ( "KSTEST_DELTA_T" ); //time interval between two distibutions
 
-
-          this->saveKolmogorovTestResults ( 0.02 );
-          this->saveKolmogorovTestResults ( 0.04 );
-          this->saveKolmogorovTestResults ( 0.06 );
-          this->saveKolmogorovTestResults ( 0.08 );
-          this->saveKolmogorovTestResults ( 0.1 );
-          this->saveKolmogorovTestResults ( 0.15 );
-          this->saveKolmogorovTestResults ( 0.2 );
-          this->saveKolmogorovTestResults ( 0.3 );
-          this->saveKolmogorovTestResults ( 0.4 );
+//           this->saveKolmogorovTestResults ( 0.02 );
+//           this->saveKolmogorovTestResults ( 0.04 );
+//           this->saveKolmogorovTestResults ( 0.06 );
+//           this->saveKolmogorovTestResults ( 0.08 );
+//           this->saveKolmogorovTestResults ( 0.1 );
+//           this->saveKolmogorovTestResults ( 0.15 );
+//           this->saveKolmogorovTestResults ( 0.2 );
+//           this->saveKolmogorovTestResults ( 0.3 );
+//           this->saveKolmogorovTestResults ( 0.4 );
           this->saveKolmogorovTestResults ( 0.5 );
-          this->saveKolmogorovTestResults ( 0.7 );
-          this->saveKolmogorovTestResults ( 0.8 );
-          this->saveKolmogorovTestResults ( 0.9 );
+//           this->saveKolmogorovTestResults ( 0.7 );
+//           this->saveKolmogorovTestResults ( 0.8 );
+//           this->saveKolmogorovTestResults ( 0.9 );
           this->saveKolmogorovTestResults ( 1.0 );
-          this->saveKolmogorovTestResults ( 1.2 );
-          this->saveKolmogorovTestResults ( 1.4 );
-          this->saveKolmogorovTestResults ( 1.6 );
-          this->saveKolmogorovTestResults ( 1.8 );
+//           this->saveKolmogorovTestResults ( 1.2 );
+//           this->saveKolmogorovTestResults ( 1.4 );
+//           this->saveKolmogorovTestResults ( 1.6 );
+//           this->saveKolmogorovTestResults ( 1.8 );
           this->saveKolmogorovTestResults ( 2.0 );
 
      }
-
-
-
+     return this;
 }
 
 
-void Analysis::calculate()
+Analysis* Analysis::calculate()
 {
-     if ( calculated ) {
-          return;
+     cout << "Analysis::calculate()"<<endl;
+     if ( !calculated ) {
+          // do something?
+          calculated = true;
      }
-
-
-     calculated = true;
+     return this;
 }
 
 
@@ -92,14 +81,12 @@ void Analysis::fillFromFile ( Datafile* f )
           double dt = settings->get ( "dt" );
           double starttime = settings->get ( "starttime" );
           for ( double t = starttime; t <= maxT;  t+=dt ) {
-//           cout << " t = " << t << endl;
+//                cout << " t = " << t << endl;
                double x = f->read();
                double y = f->read();
-//           cout << "(" << x << ","<<y<<")"<<endl;
+//                cout << "(" << x << ","<<y<<")"<<endl;
                this->fill ( t,x,y );
           }
-
-
      } else {
           cout << "Analysis::passed datafile not ok!"<<endl;
      }
@@ -108,13 +95,11 @@ void Analysis::fillFromFile ( Datafile* f )
 
 void Analysis::fill ( double t, double x, double y )
 {
-
      auto amr = this->meanR->find ( t );
      auto amg = this->marginalDistributions->find ( t );
 
      auto mrEnd = this->meanR->end();
      auto mgEnd = this->marginalDistributions->end();
-
 
      MeanRsquared * mr ;
      MarginalDistributions * marginalDistr;
@@ -133,11 +118,8 @@ void Analysis::fill ( double t, double x, double y )
           marginalDistr = amg->second;
      }
 
-
      mr->add ( x,y );
      marginalDistr->add ( x,y );
-
-
 
 //      if ( false ) {
 //
@@ -179,10 +161,11 @@ void Analysis::fill ( double t, double x, double y )
 
 
 
-void Analysis::close()
+Analysis* Analysis::close()
 {
      cout << "Analysis::close()"<<endl;
      this->deleteAnalysis();
+     return this;
 }
 
 
@@ -190,28 +173,19 @@ void Analysis::initAnalysis()
 {
      this->meanR = new map<double, MeanRsquared*>();
      this->marginalDistributions = new map<double, MarginalDistributions*>();
-
-
-
-
      histogramProducers = new map<double, HistogramsProducer *>(); ;
      edfProducers = new map<double, EDFProducer *>();
-
-
 }
 
 void Analysis::deleteAnalysis()
 {
      if ( this->meanR!=nullptr ) {
           cout << "Analysis::deleting meanR"<<endl;
-
           for ( auto it = meanR->begin(); it!= meanR->end(); ++it ) {
                MeanRsquared * mr = ( it->second );
-
                //cout << "t = " << it->first  << "\t < r^2 >  = " << mr->getMeanValue() <<endl;
                delete mr;
           }
-
           delete this->meanR;
           this->meanR = nullptr;
      }
@@ -220,17 +194,12 @@ void Analysis::deleteAnalysis()
           cout << "Analysis::deleting marginalDistributions"<<endl;
           for ( auto it = marginalDistributions->begin(); it!= marginalDistributions->end(); ++it ) {
                MarginalDistributions * distributions = ( it->second );
-
                // cout << "t = " << meanR->getT() << "\t < r^2 >  = " << meanR->getMeanValue() <<endl;
-
                //test << meanR->getT() << "\t" << meanR->getMeanValue() << endl;
-
                delete distributions;
           }
           delete marginalDistributions;
      }
-
-
 
      if ( histogramProducers!=nullptr ) {
           for ( auto it = this->histogramProducers->begin(); it!=histogramProducers->end(); ++it ) {
@@ -240,7 +209,6 @@ void Analysis::deleteAnalysis()
           }
           cout << "Analysis::delete histogramProducers"<<endl;
           delete histogramProducers;
-
      }
 
      if ( edfProducers!=nullptr ) {
@@ -252,9 +220,7 @@ void Analysis::deleteAnalysis()
           }
           cout << "Analysis::delete edfProducers"<<endl;
           delete edfProducers;
-
      }
-
      cout << "Analysis::all deleted"<<endl;
 }
 
@@ -262,7 +228,6 @@ void Analysis::deleteAnalysis()
 
 void Analysis::saveKolmogorovTestResults ( double deltaT )
 {
-
      char datafileNameX[200];
      char datafileNameY[200];
 
@@ -293,7 +258,7 @@ void Analysis::saveKolmogorovTestResults ( double deltaT )
      ofstream ksXplt ( datafileNameXplot );
 
 
-     cout << "datafileNameX:" << datafileNameX<<"\n ksXout:" << dataFullPathX << "\nksXplt:"<< datafileNameXplot << endl;
+     cout << "datafileNameX:" << datafileNameX<<"\nksXout:" << dataFullPathX << "\nksXplt:"<< datafileNameXplot << endl;
 
 
      ksXplt << "reset\n";
@@ -320,7 +285,7 @@ void Analysis::saveKolmogorovTestResults ( double deltaT )
      sprintf ( datafileNameYplot,"%s/%s_KStest_Y_deltaT_%2.3f.plt",this->settings->getStoragePath(), this->settings->getFullOutputFilesPrefix().c_str(), deltaT );
      ofstream ksYplt ( datafileNameYplot );
 
-     cout << "datafileNameY:" << datafileNameY<<"\n ksYout:" << dataFullPathY << "\nksYplt:"<< datafileNameYplot << endl;
+     cout << "datafileNameY:" << datafileNameY<<"\nksYout:" << dataFullPathY << "\nksYplt:"<< datafileNameYplot << endl;
 
 
      ksYplt << "reset\n";
@@ -351,8 +316,6 @@ void Analysis::saveKolmogorovTestResults ( double deltaT )
           keys->push_back ( ( it )->first );
      }
 
-
-
      for ( int c = 0; c < size ; c++ ) {
 
           double keyT = keys->at ( c );
@@ -360,7 +323,7 @@ void Analysis::saveKolmogorovTestResults ( double deltaT )
 
           double t = distributions->getT();
 
-          double secondT = c + deltaN;
+          // double secondT = c + deltaN;
           double keySecondT = keys->at ( c + deltaN );
           //bool secondTexists = ( this->marginalDistributions->count( secondT) == 1 );
           MarginalDistributions * secondDist = this->marginalDistributions->at ( keySecondT );
@@ -379,10 +342,8 @@ void Analysis::saveKolmogorovTestResults ( double deltaT )
 
      delete keys;
 
-
      ksXout.close();
      ksYout.close();
-
      ksXplt.close();
      ksYplt.close();
 }
@@ -396,36 +357,27 @@ void Analysis::saveMeanRTestResults()
      char dataFullPath[200];
      char datafileNamePlot[200];
 
-
-
      sprintf ( datafileName,"%s_mean_r_squared.txt", this->settings->getFullOutputFilesPrefix().c_str() );
      sprintf ( dataFullPath,"%s/%s", this->settings->getStoragePath() , datafileName );
      ofstream output ( dataFullPath );
      output << "# t\t<x^2 + y^2>\n";
-
-
      sprintf ( datafileNamePlot,"%s/%s_mean_r_squared.plt",this->settings->getStoragePath(), this->settings->getFullOutputFilesPrefix().c_str() );
      ofstream meanRplt ( datafileNamePlot );
 
 
      meanRplt << "reset\n";
-
      meanRplt << "set title ' <r^2>  {/Symbol a} = " << this->settings->getJumpsParameter();
      meanRplt << " {/Symbol b} = " << this->settings->getWaitingTimesParameter();
      meanRplt << "'\n";
-
      meanRplt << "set terminal post eps size 12,7 enhanced color font 'Helvetica,35' linewidth 2;\n";
      meanRplt << "set output \""<< this->settings->getFullOutputFilesPrefix() << "_mean_r_squared.eps\"\n";
-
      meanRplt << "set xlabel \"t\"\n";
      meanRplt << "set ylabel \"<r^2>\"\n";
-
-
 
      //double previousValue = 0.0;
 
      size_t meanRs = meanR->size();
-     int fitCount = meanRs > 50 ? 50 : meanRs;
+     int fitCount = meanRs > 50 ? meanRs/2 : meanRs/4;
      double x[fitCount], y[fitCount];
 
      int ind = 0;
@@ -448,12 +400,8 @@ void Analysis::saveMeanRTestResults()
           if ( c > meanRs - fitCount ) {
                y[ind] = mean;
                x[ind] = t;
-
                ind++;
           }
-
-
-
           //previousValue = mean;
           ++c;
      }
@@ -464,15 +412,45 @@ void Analysis::saveMeanRTestResults()
      double c0, c1;
      int code = Utility::linearRegression ( x, y, fitCount-1, &c0, &c1 );
 
+     double firstT = 0.0;
+     double firstTr = 0.0;
+     for ( auto it = meanR->begin(); it!= meanR->end(); ++it ) {
 
+          double t = it->first;
+          MeanRsquared * mr = ( it->second );
+          double mean = mr->getMeanValue();
+	  
+	  if ( mean > (c1 * t + c0) ) {
+	   cout << "meanR reaching! t = " <<t <<" \t r= " << mean << endl; 
+	   
+	   firstT = t;
+	   firstTr = mean;
+	   break;
+	  }
+     }
+     
+     
      cout << " fit code: " << code << endl;
      cout << " c0: " << c0 << "\tc1:" << c1<<endl;
      cout << "x[0] = " << x[0] << "\t x[count-2] = " << x[fitCount-2] << "\t x[count-1] =" << x[fitCount-1] <<endl;
      cout << "y[0] = " << y[0] << "\t y[count-2] = " << y[fitCount-2] << "\t y[count-1] =" << y[fitCount-1] <<endl;
 
-     meanRplt << "set arrow from "<< ( x[0] -1.0 ) <<","<< ( c1 * x[0] + c0 ) << " to "<< x[fitCount-2]<<","<< ( x[fitCount-2]* c1 + c0 ) <<" nohead lt 1 lw 3\n"<<endl;
+//      meanRplt << "set arrow from "<< ( x[0] -1.0 ) <<","<< ( c1 * x[0] + c0 ) << " to "<< x[fitCount-2]<<","<< ( x[fitCount-2]* c1 + c0 ) <<" nohead lt 1 lw 3\n"<<endl;
+     meanRplt << "set arrow from "<< 0.0 <<","<< ( c1 * x[0] + c0 ) << " to "<< x[fitCount-2]<<","<< ( x[fitCount-2]* c1 + c0 ) <<" nohead lt 1 lw 3\n"<<endl;
 
-
+     meanRplt << "set arrow from "<< firstT <<","<< (firstTr + firstTr*0.5) << " to "<< firstT<<","<< (firstTr + firstTr*0.1) <<" lt 1 lw 3\n"<<endl;
+     
      meanRplt << "plot './"<< datafileName <<"' using 1:2 w lp notitle lc rgb \"#0000ff\"\n";
      meanRplt.close();
+     
+     // find first t where r^2 reaches the line
+     
+
+     
+     sprintf ( datafileName,"%s_mean_r_squared_time.txt", this->settings->getFullOutputFilesPrefix().c_str() );
+     sprintf ( dataFullPath,"%s/%s", this->settings->getStoragePath() , datafileName );
+     ofstream meanRtime ( dataFullPath );
+     meanRtime << "#alpha\tsigma\tmean_r_time" <<"\n" ;
+     meanRtime << settings->getJumpsParameter() << "\t" << settings->getNoiseIntensity() << "\t" << firstT << "\n";
+     meanRtime.close();
 }

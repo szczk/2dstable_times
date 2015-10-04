@@ -20,8 +20,10 @@ private:
 public:  
 
 
-    // do linear regression fit
-    // for Y = c0 + c1 * x
+    /**
+     * do linear regression fit
+     * for Y = c0 + c1 * x 
+     */
     static int linearRegression( const double * x, const double * y, const size_t n, double * c0, double * c1);
     
     

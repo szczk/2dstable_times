@@ -20,7 +20,7 @@ double KolmogorovTest::calculate ( EDF* edf1 , EDF* edf2)
 {
 
 
-     double prob = -1;
+//      double prob = -1;
 
      vector<double> * vals1 = edf1->getValuesSorted();
      vector<double> * vals2 = edf2->getValuesSorted();
@@ -69,7 +69,7 @@ double KolmogorovTest::calculate ( EDF* edf1 , EDF* edf2)
    
    if (ok) {
       rdmax = max(rdmax,abs(rdiff));
-      double z = rdmax * sqrt(rna*rnb/(rna+rnb));
+//       double z = rdmax * sqrt(rna*rnb/(rna+rnb));
       //prob = KolmogorovProb(z);
    }
       // debug printout

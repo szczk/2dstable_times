@@ -5,14 +5,12 @@
 
 
 #include <iostream>
-
+#include <cstdio>
 #include "core/System.hh"
 #include "core/Randoms.hh"
 #include "core/Settings.hh"
 #include "tools/Datafile.hh"
 #include "sim/Simulation.hh"
-
-
 #include "analysis/Analysis.hh"
 
 using namespace std;
